@@ -8,6 +8,7 @@ obzirom da je on uposlenik.
 * Implementirati validaciju polja forme
 * Implementirati slanje podataka iz forme ka serveru
 * Implementirati ponašanje sistema u slučaju da su podaci odbijeni prilikom logina
+* Kreirati izgled glavnog prozora nakon uspješne prijave u aplikaciju
 * Uraditi push koda
 * Napraviti pull request
 
@@ -17,7 +18,6 @@ Pregled svih proizvoda
 Korisnik Warehouse web aplikacije mora imati mogućnost uvida u sve
 proizvode koji se trenutno nalaze u skladištu.
 ### Task
-* Kreirati izgled glavnog prozora nakon uspješne prijave u aplikaciju
 * Implementirati prikaz liste svih proizvoda u skladištu sa osnovnim informacijama (slika, naziv, cijena)
 * Uraditi push koda
 * Napraviti pull request
