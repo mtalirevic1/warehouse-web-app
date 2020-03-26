@@ -1,0 +1,25 @@
+.header.ant-layout-header {
+  width: 240px;
+  background: #00152a;
+}
+
+.ant-menu-inline {
+  min-width: 240px;
+  height: 100%;
+}
+
+.ant-layout-content {
+  height: 100%;
+}
+
+.div.ant-breadcrumb {
+  margin-left: 250px;
+}
+
+.ant-menu-dark.ant-menu-horizontal > .ant-menu-item:first-of-type {
+  background: red;
+}
+
+.anticon svg {
+  font-size: 20px;
+}

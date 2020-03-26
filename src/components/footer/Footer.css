@@ -1,0 +1,25 @@
+.footer-container,
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-container {
+  height: 5%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: #00152a;
+  z-index: 999;
+}
+
+.footer {
+  font-size: 12px;
+  font-weight: bold;
+  color: whitesmoke;
+  height: 100%;
+  width: 300px;
+  margin: 0;
+}
