@@ -14,13 +14,10 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
   background: #f0f5ff;
   border-radius: 25px;
+  padding-top: 2%;
 }
 .login-form-forgot {
   margin-right: 2px;
-}
-
-.login-form-input:first-of-type {
-  margin-top: 8%;
 }
 
 .login-form-button,

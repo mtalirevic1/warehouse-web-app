@@ -47,21 +47,7 @@ const Login = () => {
                     />
                 </Form.Item>
                 <Form.Item>
-                    <Form.Item name="remember" valuePropName="checked" noStyle>
-                        <Checkbox className="login-form-checkbox" >Remember me</Checkbox>
-                    </Form.Item>
-
-                    <a className="login-form-forgot" href="">
-                        Forgot password
-        </a>
-                </Form.Item>
-
-                <Form.Item>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
-                        Log in
-        </Button>
-                    <br></br>
-        Or <a href="">register now!</a>
+                    <Button type="primary" htmlType="submit" className="login-form-button">Log in</Button>
                 </Form.Item>
             </Form>
         </div>
