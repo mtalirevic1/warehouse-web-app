@@ -1,6 +1,6 @@
 import React from 'react';
 import './HomePage.css';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu } from 'antd';
 import { ShoppingCartOutlined, ShopOutlined, BarChartOutlined } from '@ant-design/icons';
 
 const { SubMenu } = Menu;
@@ -10,17 +10,15 @@ const MainPage = () => {
     return (
         <Layout>
             <Header className="header">
-                <div className="logo" />
                 <Menu
                     theme="dark"
                     mode="horizontal"
-                    defaultSelectedKeys={['2']}
                 >
                     <Menu.Item key="1"><ShoppingCartOutlined /></Menu.Item>
                     <Menu.Item key="2"><ShopOutlined /></Menu.Item>
                     <Menu.Item key="3"><BarChartOutlined /></Menu.Item>
+                    <Menu.Item id="appName">Warehouse Web app</Menu.Item>
                 </Menu>
-
             </Header>
             <Layout>
                 <Sider width={200} className="site-layout-background">

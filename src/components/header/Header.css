@@ -1,12 +1,12 @@
 .header-container,
-.header {
+.myheader {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 65px;
 }
 
 .header-container {
-  height: 9.8%;
   position: fixed;
   left: 0;
   top: 0;
@@ -15,11 +15,10 @@
   color: white;
 }
 
-.header {
+.myheader {
   font-size: 25px;
   font-weight: bold;
   color: whitesmoke;
-  height: 100%;
   width: 300px;
   margin: 0;
 }

@@ -1,5 +1,5 @@
 .header.ant-layout-header {
-  width: 240px;
+  width: 100%;
   background: #00152a;
 }
 
@@ -12,14 +12,15 @@
   height: 100%;
 }
 
-.div.ant-breadcrumb {
-  margin-left: 250px;
-}
-
-.ant-menu-dark.ant-menu-horizontal > .ant-menu-item:first-of-type {
-  background: red;
-}
-
 .anticon svg {
   font-size: 20px;
+}
+
+#appName {
+  margin-left: 26%;
+  font-size: 25px;
+  font-weight: bold;
+  color: whitesmoke;
+  width: 300px;
+  background-color: #00152a;
 }
