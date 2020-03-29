@@ -1,0 +1,26 @@
+.header-container,
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-container {
+  height: 9.8%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background: #00152a;
+  color: white;
+}
+
+.header {
+  font-size: 25px;
+  font-weight: bold;
+  color: whitesmoke;
+  height: 100%;
+  width: 300px;
+  margin: 0;
+  background: #00152a;
+}

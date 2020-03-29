@@ -4,6 +4,7 @@ import {Layout, Menu} from 'antd';
 import {ShoppingCartOutlined, ShopOutlined, BarChartOutlined, UserOutlined} from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import MenuItem from "antd/es/menu/MenuItem";
+import {Link} from 'react-router-dom';
 
 const {Header} = Layout;
 
@@ -24,10 +25,14 @@ const MyHeader = props => {
                         key="sub1"
                         title={<span><ShoppingCartOutlined style={{width: '20px', height: '20px'}}/>Products</span>}
                     >
-                        <Menu.Item key="1" style={{marginTop: "0", paddingTop: "0"}}>Add new product</Menu.Item>
+                        <Menu.Item key="1" style={{marginTop: "0", paddingTop: "0"}}>
+                        <Link to='/addProduct'>Add new product</Link>
+                        </Menu.Item>
                         <Menu.Item key="2">Change product quantity</Menu.Item>
                         <Menu.Item key="3">Delete product</Menu.Item>
-                        <Menu.Item key="4">Display products</Menu.Item>
+                        <Menu.Item key="4">
+                            <Link to='/productsTable'>Display products</Link>
+                        </Menu.Item>
                     </SubMenu>
 
                     <SubMenu
@@ -43,10 +48,12 @@ const MyHeader = props => {
                     >
                         <Menu.Item key="9">Display reports</Menu.Item>
                     </SubMenu>
-                    <Menu.Item id="appName">Warehouse Web app</Menu.Item>
+                    <Menu.Item id="appName">
+                        <Link to='/homePage'>Warehouse Web app</Link>
+                    </Menu.Item>
                     <SubMenu className="user"
                         id="user"
-                        title={<span><UserOutlined/>{props.username}</span>}
+                        title={<span><UserOutlined style={{width: '20px', height: '20px'}}/>{props.username}</span>}
                     >
                         <MenuItem onClick={onLogout}>Log out</MenuItem>
                     </SubMenu>
