@@ -1,71 +1,66 @@
 import React from 'react';
 import './HomePage.css';
-import { Layout, Menu } from 'antd';
+import { Layout } from 'antd';
 import { ShoppingCartOutlined, ShopOutlined, BarChartOutlined } from '@ant-design/icons';
+import MyHeader from '../header/MyHeader';
+import Footer from '../footer/Footer';
 
-const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+const { Content } = Layout;
 
-const MainPage = () => {
+const HomePage = props => {
     return (
         <Layout>
-            <Header className="header">
-                <Menu
-                    theme="dark"
-                    mode="horizontal"
-                >
-                    <Menu.Item key="1"><ShoppingCartOutlined /></Menu.Item>
-                    <Menu.Item key="2"><ShopOutlined /></Menu.Item>
-                    <Menu.Item key="3"><BarChartOutlined /></Menu.Item>
-                    <Menu.Item id="appName">Warehouse Web app</Menu.Item>
-                </Menu>
-            </Header>
+            <MyHeader loggedInStatus={props.loggedInStatus}
+                token={props.token}
+                username={props.username} />
             <Layout>
-                <Sider width={200} className="site-layout-background">
-                    <Menu
-                        mode="inline"
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
-                        style={{ height: '100%', borderRight: 0 }}
-                    >
-                        <SubMenu
-                            key="sub1"
-                            title={<span><ShoppingCartOutlined />Proizvodi</span>}
-                        >
-                            <Menu.Item key="1">Dodavanje novih proizvoda</Menu.Item>
-                            <Menu.Item key="2">Izmjena stanja proizvoda</Menu.Item>
-                            <Menu.Item key="3">Brisanje proizvoda</Menu.Item>
-                            <Menu.Item key="4">Pregled proizvoda</Menu.Item>
-                        </SubMenu>
-                        <SubMenu
-                            key="sub2"
-                            title={<span><ShopOutlined />Poslovnice</span>}
-                        >
-                            <Menu.Item key="5">Pregled poslovnica</Menu.Item>
-                        </SubMenu>
-                        <SubMenu
-                            key="sub3"
-                            title={<span><BarChartOutlined />Izvještaji</span>}
-                        >
-                            <Menu.Item key="9">Pregled izvještaja</Menu.Item>
-                        </SubMenu>
-                    </Menu>
-                </Sider>
-                <Layout style={{ padding: '0 24px 24px' }}>
-                    <Content
-                        className="site-layout-background"
-                        style={{
-                            padding: 24,
-                            margin: 0,
-                            minHeight: 550,
-                        }}
-                    >
+                <Content
+                    className="site-layout-background"
+                    style={{
+                        padding: 24,
+                        margin: 0,
+                        minHeight: 550,
+                    }}
+                >
+                    <div className="home-content">
+                        <h1 className="welcome"> Welcome user {props.username}!</h1>
+                        <hr></hr>
 
-                    </Content>
-                </Layout>
+                        <div className="circle">
+                            <ShoppingCartOutlined style={{ width: '50px', height: '50px' }} className="bigicon" />
+                            <h2>Products</h2>
+                            <hr className="smallhr"></hr>
+                            <p>
+                                You can manage receiving new products what includes adding new product or
+                                changing products quantity. You also can delete certain product or see
+                                all products that are currently in stock.
+                            </p>
+                        </div>
+                        <div className="circle">
+                            <ShopOutlined style={{ width: '50px', height: '50px' }} className="bigicon" />
+                            <h2>Stores</h2>
+                            <hr className="smallhr"></hr>
+                            <p>
+                                You can receive requests for products from stores and send products to
+                                stores that require them. You can see all the stores and supplies of
+                                all the products in each of the stores.
+                            </p>
+                        </div>
+                        <div className="circle">
+                            <BarChartOutlined style={{ width: '50px', height: '50px' }} className="bigicon" />
+                            <h2>Reports</h2>
+                            <hr className="smallhr"></hr>
+                            <p>
+                                You can see different reports on assigned products that can be filtered by date,
+                                amount of assigned products, or store name.
+                            </p>
+                        </div>
+                    </div>
+                </Content>
             </Layout>
+            <Footer />
         </Layout >
     );
 };
 
-export default MainPage;
+export default HomePage;
