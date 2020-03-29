@@ -10,6 +10,9 @@ import ReactDOM from 'react-dom';
 import FileUploader from './FileUploader';
 import {Link} from 'react-router-dom';
 import CurrencyInput from 'react-currency-input';
+import validate from './AddValidation';
+import UseForm from './AddValidation';
+import { useForm } from 'antd/lib/form/util';
 
 const onSubmit = e => {
 
@@ -20,21 +23,23 @@ const AddProduct = props => {
         console.log('Product: ', values);
     };
 
-    const handleChange = e => {
-        const state = {
-            name: "",
-            number:"",
-            price:"",
-            discount:"",
-            nameError:"",
-            numberError:"",
-            priceError:"",
-            discount:"error"
-        }
+
+    const {
+        values,
+        errors,
+        handleChange,
+        handleSubmit,
+    } = UseForm(add, validate);
+
+
+
+    function add() {
+        console.log('No errors, submit callback called!');
     }
 
     return (
 
+        
         <Layout>
             <MyHeader loggedInStatus={props.loggedInStatus}
                 token={props.token}
@@ -80,42 +85,31 @@ const AddProduct = props => {
                     rules={[
                         {
                             required: true,
-                            message: 'Please insert product name!',
-                        },
-                    ]}
-                >
-                    <Input name="name"
-                      className="add-form-input"
-                      placeholder="Product name" />
-                </Form.Item>
-                <Form.Item
-                    name="productNumber"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please insert number of products!',
+                            message: "Plesade enter product name!",
+
                         },
                     ]}
                 >
                     <Input
-                        type="number"
-                        min="0"
-                        className="add-form-input"
-                        placeholder="Number of products"
-                    />
+                      className="add-form-input"
+                      name="name"
+                      placeholder="Product name" />
                 </Form.Item>
                 <Form.Item
                     name="productPrice"
                     rules={[
                         {
                             required: true,
-                            message: 'Please insert product price!',
+                            message: "Plesade enter product price!",
+
                         },
                     ]}
                 >
-                    <Input   
-                        type="number-float"
+                    <Input
                         className="add-form-input"
+                        name="price"
+                        type="number"
+                        min="0"
                         placeholder="Price"
                     />
                 </Form.Item>
@@ -123,17 +117,36 @@ const AddProduct = props => {
                     name="productDiscount"
                     rules={[
                         {
-                            required: false,
-                            message: 'Please insert product discount!',
+                            required: true,
+                            message: "Please enter product discount!",
                         },
                     ]}
                 >
                     <Input
+                        name="discount"
+                        className="add-form-input"
                         type="number"
                         min="0"
                         max="100"
+                        placeholder="Discount in %"
+                    />
+                </Form.Item>
+                <Form.Item
+                    name="productNumber"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Plesade enter number of products!",
+
+                        },
+                    ]}
+                >
+                    <Input
                         className="add-form-input"
-                        placeholder="Discount"
+                        name="number"
+                        type="number"
+                        min="0"
+                        placeholder="Number of products"
                     />
                 </Form.Item>
                 <Form.Item>
