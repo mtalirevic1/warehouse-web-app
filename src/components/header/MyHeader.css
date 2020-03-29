@@ -1,0 +1,53 @@
+.header.ant-layout-header {
+  width: 100%;
+  background: #00152a;
+  padding: 0 5px;
+  position: fixed;
+  z-index: 999;
+}
+
+.ant-menu-inline {
+  min-width: 240px;
+  height: 100%;
+}
+
+.ant-layout-content {
+  height: 100%;
+  padding: 0;
+}
+
+.anticon svg {
+  font-size: 20px;
+}
+
+#appName {
+  margin-left: 14%;
+  font-size: 25px;
+  font-weight: bold;
+  color: whitesmoke;
+  width: 300px;
+  background-color: #00152a;
+}
+
+.anticon svg {
+  height: 100%;
+  width: 100%;
+}
+
+@media only screen and (max-width: 950px) {
+  .ant-layout-header {
+    padding: 0;
+    line-height: 40px;
+    height: 40px;
+    text-align: center;
+  }
+
+  .ant-menu-submenu-title {
+    padding: 0;
+    padding-left: 20px;
+  }
+
+  #appName {
+    font-size: 20px;
+  }
+}
