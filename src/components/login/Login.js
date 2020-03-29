@@ -39,7 +39,7 @@ const Login = props => {
                         }
                     ]}
                 >
-                    <Input className="login-form-input" prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+                    <Input className="login-form-input" prefix={<UserOutlined className="site-form-item-icon" style={{width: '20px', height: '20px'}}/>} placeholder="Username" />
                 </Form.Item>
                 <Form.Item
                     name="password"
@@ -53,7 +53,7 @@ const Login = props => {
                 >
                     <Input
                         className="login-form-input"
-                        prefix={<LockOutlined className="site-form-item-icon" />}
+                        prefix={<LockOutlined className="site-form-item-icon" style={{width: '20px', height: '20px'}}/>}
                         type="password"
                         placeholder="Password"
                     />

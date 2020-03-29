@@ -4,6 +4,7 @@ import Login from './components/login/Login';
 import HomePage from './components/homePage/HomePage';
 
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom';
+import AddProduct from './components/addProduct/AddProduct';
 
 
 const ProtectedRoute = ({component: Comp, loggedInStatus, username, token, path, handleLogout, ...rest}) => {
@@ -80,6 +81,16 @@ class App extends Component {
                         token={this.state.token}
                         username={this.state.username}
                         component={HomePage}
+                        handleLogout={this.handleLogout}
+                    />
+
+                    <ProtectedRoute
+                        path="/addproduct"
+                        exact
+                        loggedInStatus={this.state.loggedInStatus}
+                        token={this.state.token}
+                        username={this.state.username}
+                        component={AddProduct}
                         handleLogout={this.handleLogout}
                     />
 
