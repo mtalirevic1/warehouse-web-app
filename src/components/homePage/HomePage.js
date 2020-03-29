@@ -12,7 +12,8 @@ const HomePage = props => {
         <Layout>
             <MyHeader loggedInStatus={props.loggedInStatus}
                 token={props.token}
-                username={props.username} />
+                username={props.username}
+                handleLogout={props.handleLogout}/>
             <Layout>
                 <Content
                     className="site-layout-background"
