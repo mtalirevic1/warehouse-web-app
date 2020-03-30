@@ -1,0 +1,101 @@
+.home-content {
+  text-align: center;
+}
+
+.welcome {
+  margin-top: 5%;
+  font-size: 40px;
+  font-weight: 900;
+  color: #00152a;
+}
+
+hr {
+  margin-left: auto;
+  margin-right: auto;
+  border: 0;
+  height: 1px;
+  width: 45%;
+  background: #333;
+  background: linear-gradient(to right, #ccc, #333, #ccc);
+}
+
+.smallhr {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  background: linear-gradient(to right, #9cb7ff, #333, #9cb7ff);
+}
+
+.circle {
+  background: #9cb7ff;
+  border-radius: 100px;
+  margin-top: 5%;
+  margin-left: 2.5%;
+  float: left;
+  width: 30%;
+  padding: 10px;
+  height: 300px;
+  text-align: center;
+}
+
+.circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.bigicon {
+  margin-top: 5%;
+}
+
+h2 {
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+p {
+  font-size: 13px;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+@media (min-width: 650px) and (max-width: 980px) {
+  .circle {
+    margin-left: 5%;
+    margin-bottom: 5%;
+    width: 42.5%;
+    float: left;
+  }
+
+  .circle:last-of-type {
+    clear: both;
+    float: unset;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .welcome {
+    margin-top: 50px;
+    font-size: 30px;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .ant-layout-content {
+    padding: 0;
+  }
+
+  .welcome {
+    margin-top: 25px;
+    font-size: 24px;
+  }
+
+  .circle {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5%;
+    width: 80%;
+    float: none;
+  }
+}

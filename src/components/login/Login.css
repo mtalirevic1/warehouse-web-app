@@ -1,0 +1,63 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.login-form {
+  width: 300px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+  background: #f0f5ff;
+  border-radius: 25px;
+  padding-top: 2%;
+}
+
+.login-form-button,
+.login-form-input {
+  width: 80%;
+}
+
+.header-container,
+.myheader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 65px;
+}
+
+.header-container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background: #00152a;
+  color: white;
+}
+
+.myheader {
+  font-size: 25px;
+  font-weight: bold;
+  color: whitesmoke;
+  width: 300px;
+  margin: 0;
+}
+
+.ant-message-notice-content {
+  margin-top: 10%;
+  width: 300px;
+  height: 50px;
+  color: red;
+}
+
+@media only screen and (max-width: 600px) {
+  .login-form {
+    padding-top: 5%;
+    margin-top: 10%;
+    max-width: 200px;
+  }
+}
