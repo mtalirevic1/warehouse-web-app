@@ -39,7 +39,7 @@ const AddProduct = props => {
 
     return (
 
-        
+
         <Layout>
             <MyHeader loggedInStatus={props.loggedInStatus}
                 token={props.token}
@@ -100,7 +100,7 @@ const AddProduct = props => {
                     rules={[
                         {
                             required: true,
-                            message: "Plesade enter product price!",
+                            message: "Please enter product price!",
 
                         },
                     ]}
@@ -136,7 +136,7 @@ const AddProduct = props => {
                     rules={[
                         {
                             required: true,
-                            message: "Plesade enter number of products!",
+                            message: "Please enter number of products!",
 
                         },
                     ]}
