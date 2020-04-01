@@ -1,68 +1,91 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+Warehouse Web App
+================
 
-In the project directory, you can run:
+Warehouse Web App is a module created for a software engineering course at the Faculty of Electrical Engineering Sarajevo. It is one part of a bigger projects that consists of 12 modules. The purpose of the app is to manage a fictional warehouse that is responsible for supplying a chain of stores with various products. The users of the app are intended to be warehouse managers.
 
-### `npm start`
+## Get Started
+Warehouse Web App is a React app which works on all modern web browsers. To build this app, you should have Node.js installed on your local machine.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+After cloning the repository to your local machine, in the root directory:
+* Install dependencies with `npm install` 
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Start the app with 
+* `npm start`
 
-### `npm test`
+Alternatively, you can visit the following link:
+* [https://warehouse-web-app.herokuapp.com/](https://warehouse-web-app.herokuapp.com/)
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+A user can log into the web app using the following credentials:
+### username:  mtalirevic
+### password: password
+### Once logged in a user can:
+*  Manage receiving new products what includes adding new product or changing products quantity. 
+* Delete certain product or see all products that are currently in stock.
+* Receive requests for products from stores and send products to stores that require them.
+*  See all the stores and supplies of all the products in each of the stores.
+* See different reports on assigned products that can be filtered by date, amount of assigned products, or store name.
 
-### `npm run build`
+## Contribute
+Contributions to our app are always welcome. Try our code and submit
+* Bugs
+* Feature requests
+* [Pull requests](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) for bug fixes or new features
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+## Feedback
+Leave feedback directly on [Github](https://github.com/mtalirevic1/warehouse-web-app/issues/new)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Related projects
 
-### `npm run eject`
+#### Main server - Lamija Vrnjak
+https://github.com/lvrnjak1/MainServer
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+#### Cash register server - Samra Pušina
+https://github.com/spusina1/CashRegisterServer
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### Payment server - Zerina Aščerija
+https://github.com/zascerija1/PaymentServer
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Web applications
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+#### User management web app - Faris Poljčić
+https://github.com/fpoljcic/user-management-web-app
 
-## Learn More
+#### Merchant dashboard web app - Jasmin Bajrić
+https://github.com/jbajric/merchant-dashboard-web-app
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### Warehouse web app - Matej Talirević
+https://github.com/mtalirevic1/warehouse-web-app
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### Admin web app - Mirza Sinanović
+https://github.com/msinanovic2
 
-### Code Splitting
+#### Payment dashboard web app - Ajša Hajradinović
+https://github.com/ahajradino1/payment-dashboard-webapp
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+#### Public relations web wpp - Džavid Brdar
+https://github.com/avid-dz/public-relations-web-app
 
-### Analyzing the Bundle Size
+### Mobile applications
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+#### Seller mobile app - Mubina Kamberović
+https://github.com/kamberovicmubina/SellerMobileApp
 
-### Making a Progressive Web App
+#### Payment Mobile App - Amra Dadić
+https://github.com/amradadic/PayMobileApp
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+### Desktop applications
+#### Cash register - Denis Selimović
+https://github.com/dselimovic1/CashRegisterApp
 
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## Team
+Team Golf<br><br>
+<a href="https://github.com/mtalirevic1" target="_blank"><img width="100px" height="100px" src="https://github.com/mtalirevic1.png"></a>
+<a href="https://github.com/somerhaldera" target="_blank"><img width="100px" height="100px" src="https://github.com/somerhaldera.png"></a>
+<a href="https://github.com/nimamovic" target="_blank"><img width="100px" height="100px" src="https://github.com/nimamovic.png"></a>
+<a href="https://github.com/zlxxo" target="_blank"><img width="100px" height="100px" src="https://github.com/zlxxo.png"></a>
+<a href="https://github.com/emirx" target="_blank"><img width="100px" 
+height="100px" src="https://github.com/emirx.png"></a>
+<a href="https://github.com/bhrustemov1" target="_blank"><img width="100px" height="100px" src="https://github.com/bhrustemov1.png"></a>
+<a href="https://github.com/harisajdinovic" target="_blank"><img width="100px" height="100px" src="https://github.com/harisajdinovic.png"></a>

@@ -1,24 +1,4 @@
-  
-  .column3 {
-    float: left;
-    width: 30%;
-    padding: 10px;
-    margin-right: 20px;
-    margin-left: 100px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    background: #9cb7ff;
-  }
-
-  .column4 {
-    float: right;
-    width: 60%;
-    padding: 10px;
-    margin: 20px;
-  }
-  
-  .add-container {
+    .add-container {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -27,9 +7,11 @@
     }
     
     .add-form {
-      width: 700px;
+      width: 600px;
       max-width: 1000px;
       display: flex;
+      justify-content: center;
+      align-items: center;
       margin-left: auto;
       margin-right: auto;
       background: #9cb7ff;
@@ -40,9 +22,8 @@
       margin-right: 2px;
     }
     
-    .add-form-button,
-    .add-form-input {
-      width: 60%;
+    .add-form-button {
+      width: 100%;
     }
     
     .add-form-checkbox {
@@ -50,19 +31,21 @@
     }
 
     .cancel {
-      width: 60%;
+      width: 100%;
       background-color: rgb(206, 203, 203);
       color: rgb(97, 96, 96);
     }
-    .add-form-input1 {
-      width: 60%;
+    .add-form-input {
+      width: 100%;
       align-items: center;
       display: flex;
       justify-content: center;
-      margin-left: 80px;
     }
   
     .title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       color: #00152a;
     }
   

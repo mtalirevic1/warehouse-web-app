@@ -10,7 +10,8 @@ function getBase64(img, callback) {
 }
 
 function beforeUpload(file) {
-  const isJpgOrPng = file.type === 'image/jpeg';
+  const acceptedImageTypes = ['image/jpeg', 'image/png'];
+  const isJpgOrPng = acceptedImageTypes.includes(file['type']);
   if (!isJpgOrPng) {
     message.error('You can only upload JPG file!');
   }
@@ -37,9 +38,12 @@ class Avatar extends React.Component {
         this.setState({
           imageUrl,
           loading: false,
-        }),
+          img: info.file.originFileObj
+        })
       );
+      this.props.updateImg(info.file.originFileObj);
     }
+
   };
 
   render() {
