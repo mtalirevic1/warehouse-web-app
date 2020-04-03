@@ -24,15 +24,23 @@ export default class ProductsTable extends Component {
                     width: '20%',
                 },
                 {
-                    title: 'Naziv',
+                    title: 'Name',
                     dataIndex: 'name',
                 },
                 {
-                    title: 'Cijena',
+                    title: 'Barcode',
+                    dataIndex: 'barcode',
+                },
+                {
+                    title: 'Unit',
+                    dataIndex: 'unit',
+                },
+                {
+                    title: 'Price',
                     dataIndex: 'price',
                 },
                 {
-                    title: 'Slika',
+                    title: 'Picture',
                     dataIndex: 'image',
                     render: theImageURL => <img alt={theImageURL} src={theImageURL} width="40" height="40"/>
                 },
