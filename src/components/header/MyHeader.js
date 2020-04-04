@@ -39,7 +39,9 @@ const MyHeader = props => {
                         key="sub2"
                         title={<span><ShopOutlined style={{width: '20px', height: '20px'}}/>Stores</span>}
                     >
-                        <Menu.Item key="5">Display stores</Menu.Item>
+                        <Menu.Item key="5">
+                          <Link to='/storesTable'>Display stores</Link>
+                        </Menu.Item>
                     </SubMenu>
 
                     <SubMenu
