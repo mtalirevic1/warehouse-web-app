@@ -8,6 +8,7 @@ import AddProduct from './components/addProduct/AddProduct';
 import ProductsTable from "./components/productsTable/ProductsTable";
 import ReceivedLogs from "./components/logs/ReceivedLogs";
 import SentLogs from "./components/logs/SentLogs";
+import StoresTable from "./components/storesTable/StoresTable";
 
 
 const ProtectedRoute = ({component: Comp, loggedInStatus, username, token, path, handleLogout, ...rest}) => {
@@ -127,6 +128,15 @@ class App extends Component {
                         handleLogout={this.handleLogout}
                     />
 
+                    <ProtectedRoute
+                        path="/storesTable"
+                        exact
+                        loggedInStatus={this.state.loggedInStatus}
+                        token={this.state.token}
+                        username={this.state.username}
+                        component={StoresTable}
+                        handleLogout={this.handleLogout}
+                    />
                 </Router>
             </div>
         );

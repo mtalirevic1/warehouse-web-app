@@ -16,7 +16,7 @@ const {Header} = Layout;
 
 const MyHeader = props => {
 
-    const onLogout = values =>{
+    const onLogout = values => {
         props.handleLogout();
     };
 
@@ -32,7 +32,7 @@ const MyHeader = props => {
                         title={<span><ShoppingCartOutlined style={{width: '20px', height: '20px'}}/>Products</span>}
                     >
                         <Menu.Item key="1" style={{marginTop: "0", paddingTop: "0"}}>
-                        <Link to='/addProduct'>Add new product</Link>
+                            <Link to='/addProduct'>Add new product</Link>
                         </Menu.Item>
                         <Menu.Item key="2">
                             <Link to='/productsTable'>Display products</Link>
@@ -43,7 +43,9 @@ const MyHeader = props => {
                         key="sub2"
                         title={<span><ShopOutlined style={{width: '20px', height: '20px'}}/>Stores</span>}
                     >
-                        <Menu.Item key="5">Display stores</Menu.Item>
+                        <Menu.Item key="5">
+                            <Link to='/storesTable'>Display stores</Link>
+                        </Menu.Item>
                     </SubMenu>
 
                     <SubMenu
@@ -67,8 +69,9 @@ const MyHeader = props => {
                         <Link to='/homePage'>Warehouse Web app</Link>
                     </Menu.Item>
                     <SubMenu className="user"
-                        id="user"
-                        title={<span><UserOutlined style={{width: '20px', height: '20px'}}/>{props.username}</span>}
+                             id="user"
+                             title={<span><UserOutlined
+                                 style={{width: '20px', height: '20px'}}/>{props.username}</span>}
                     >
                         <MenuItem onClick={onLogout}>Log out</MenuItem>
                     </SubMenu>
