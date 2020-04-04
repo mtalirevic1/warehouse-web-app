@@ -17,7 +17,7 @@ Alternatively, you can visit the following link:
 * [https://warehouse-web-app.herokuapp.com/](https://warehouse-web-app.herokuapp.com/)
 
 A user can log into the web app using the following credentials:
-### username:  mtalirevic
+### username:  matej
 ### password: password
 ### Once logged in a user can:
 *  Manage receiving new products what includes adding new product or changing products quantity. 
