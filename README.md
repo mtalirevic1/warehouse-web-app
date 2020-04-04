@@ -4,6 +4,10 @@ Warehouse Web App
 
 Warehouse Web App is a module created for a software engineering course at the Faculty of Electrical Engineering Sarajevo. It is one part of a bigger project that consists of 12 modules. The purpose of the app is to manage a fictional warehouse that is responsible for supplying a chain of stores with various products. The users of the app are intended to be warehouse managers.
 
+<p align="center">
+<img src="https://github.com/mtalirevic1/warehouse-web-app/blob/master/homeScreen.PNG" width="960" height="520">
+</p>
+
 ## Get Started
 Warehouse Web App is a React app which works on all modern web browsers. To build this app, you should have Node.js installed on your local machine.
 
