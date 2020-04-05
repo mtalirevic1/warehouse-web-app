@@ -90,7 +90,7 @@ export default class StoresTable extends Component {
             quantityOfSelectedProduct: 0,
             addQuantity: 0,
             productId: null,
-            
+
         };
         this.handleSelect = this.handleSelect.bind(this);
         this.handleQuantityChange = this.handleQuantityChange.bind(this);
@@ -101,7 +101,7 @@ export default class StoresTable extends Component {
         this.setState({ addQuantity: event.target.value });
     }
 
-    handleSelect (quantity, id) { 
+    handleSelect (quantity, id) {
         this.setState({quantityOfSelectedProduct: quantity, productId: id});
       }
 
@@ -197,7 +197,7 @@ export default class StoresTable extends Component {
                     okText="Transfer"
                 >
                     <div>
-                        Product: 
+                        Product:
                         {<AutoComplete
                             style = {{ width: 300 }}
                             options = {options}
@@ -206,7 +206,7 @@ export default class StoresTable extends Component {
                                 option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
                             }
                             onSelect ={this.onProductSelected}
-                            
+
                         />}
                     </div>
                     {
@@ -265,17 +265,17 @@ export default class StoresTable extends Component {
                                                                                     });
                 var length = that.state.warehouseProducts.length;
                 for (var i= 0; i < length; i++) {
-                    if(that.state.warehouseProducts[i].productId == that.state.productId)
+                    if(that.state.warehouseProducts[i].productId === that.state.productId)
                         that.state.warehouseProducts[i].quantity-=quantityToAdd;
                 }
                 axios.post('https://main-server-si.herokuapp.com/api/inventory', { officeId: storeId, productId: that.state.productId, quantity: quantityToAdd}).then( () => {
-                    message.success("Successfuly transfered products");
+                    message.success("Successfully transferred products");
                     this.handleSelect(null, null);
                     that.setState({addQunatity: null, transferModalVisible: false, activeItemId: null});
                 })
             });
-         
-        
+
+
     }
     render() {
         const dataSource = this.state.offices;
