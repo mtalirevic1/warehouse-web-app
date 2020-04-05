@@ -21,7 +21,7 @@
 }
 
 #appName {
-  margin-left: 14%;
+  margin-left: 6.5%;
   font-size: 25px;
   font-weight: bold;
   color: whitesmoke;
@@ -52,6 +52,6 @@
   }
 }
 
-#user{
+#user {
   float: right;
 }
