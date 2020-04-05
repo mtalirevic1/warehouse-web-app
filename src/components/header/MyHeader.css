@@ -55,3 +55,9 @@
 #user {
   float: right;
 }
+
+@media only screen and (min-width: 1000px) {
+  #appName{
+    margin-left: 19%;
+  }
+}

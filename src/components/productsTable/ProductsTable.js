@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Layout, Popconfirm, message, Modal, Form, Input, InputNumber, Button, Upload } from 'antd';
+import { Table, Layout, Popconfirm, message, Modal, Form, Input } from 'antd';
 import axios from 'axios';
 import MyHeader from "../header/MyHeader";
 import Footer from "../footer/Footer";
@@ -93,7 +93,7 @@ export default class ProductsTable extends Component {
             isLoadingUpdate: false,
             updateVisible: false,
             activeItem: null,
-            
+
             img: null,
             name: null,
             price: null,
@@ -236,7 +236,7 @@ export default class ProductsTable extends Component {
         })
     }
 
-    
+
 
     renderUpdate = record => {
         if (this.state.id === record.id) {
@@ -312,7 +312,7 @@ export default class ProductsTable extends Component {
                                     },
                                 ]}
                             >
-                                <Input id="unit" name="unit" placeholder="Unit" 
+                                <Input id="unit" name="unit" placeholder="Unit"
                                 value={this.state.unit}
                                 onChange={this.handleUnitChange}
                                 defaultValue={record.unit}
@@ -338,7 +338,7 @@ export default class ProductsTable extends Component {
                                     placeholder="Barcode"
                                 />
                             </Form.Item>
-                            
+
                         </Form>
                 </Modal >
             );
