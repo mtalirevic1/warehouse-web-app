@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+body,
+.ant-layout-content {
+  background-color: #f1f2f6;
+}
+
 .welcome {
   margin-top: 5%;
   font-size: 40px;
