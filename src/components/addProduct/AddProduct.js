@@ -34,7 +34,8 @@ class AddProduct extends Component {
                 name: values.productName,
                 price: values.productPrice,
                 unit: values.productUnit,
-                barcode: values.productBarcode
+                barcode: values.productBarcode,
+                description: values.productDescription
             };
             axios.defaults.headers.common['Authorization'] = token;
             axios.defaults.headers.common['Content-Type'] = "application/json";
@@ -178,6 +179,22 @@ class AddProduct extends Component {
                                     name="barcode"
                                     id="barcode"
                                     placeholder="Barcode"
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                name="productDescription"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Enter a description!",
+                                    },
+                                ]}
+                            >
+                                <Input.TextArea
+                                    className="add-form-input"
+                                    name="description"
+                                    id="description"
+                                    placeholder="Description"
                                 />
                             </Form.Item>
                             <Form.Item>
