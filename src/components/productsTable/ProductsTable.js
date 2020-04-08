@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Table, Layout, Popconfirm, message, Modal, Form, Input } from 'antd';
+import React, {Component} from 'react'
+import {Table, Layout, Popconfirm, message, Modal, Form, Input} from 'antd';
 import axios from 'axios';
 import MyHeader from "../header/MyHeader";
 import Footer from "../footer/Footer";
@@ -45,7 +45,8 @@ export default class ProductsTable extends Component {
                 {
                     title: 'Picture',
                     dataIndex: 'image',
-                    render: theImageURL => <img className="productPicture" alt={theImageURL} src={theImageURL} width="40" height="40" />
+                    render: theImageURL => <img className="productPicture" alt={theImageURL} src={theImageURL}
+                                                width="40" height="40"/>
                 },
                 {
                     title: 'Change quantity',
@@ -99,7 +100,8 @@ export default class ProductsTable extends Component {
             price: null,
             unit: null,
             id: null,
-            barcode: null
+            barcode: null,
+            description: null
         };
 
         this.handleQuantityChange = this.handleQuantityChange.bind(this);
@@ -108,6 +110,7 @@ export default class ProductsTable extends Component {
         this.handlePriceChange = this.handlePriceChange.bind(this);
         this.handleUnitChange = this.handleUnitChange.bind(this);
         this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
+        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
     }
 
     updateImg(data) {
@@ -117,7 +120,7 @@ export default class ProductsTable extends Component {
     }
 
     handleQuantityChange(event) {
-        this.setState({ addQuantity: event.target.value });
+        this.setState({addQuantity: event.target.value});
     }
 
     handleNameChange(event) {
@@ -136,85 +139,101 @@ export default class ProductsTable extends Component {
         this.setState({barcode: event.target.value});
     }
 
+    handleDescriptionChange(event) {
+        this.setState({description: event.target.value});
+    }
+
     onCloseModal = () => {
-        this.setState({ modalVisible: false, activeItemId: null, currentQuantity: null, addQuantity: null });
+        this.setState({modalVisible: false, activeItemId: null, currentQuantity: null, addQuantity: null});
     };
 
     onOpenModal = id => {
-        this.setState({ modalVisible: true, activeItemId: id })
+        this.setState({modalVisible: true, activeItemId: id})
         this.getCurrentQuantity(id);
     };
 
     onOpenUpdate = record => {
-        this.setState({ updateVisible: true, name: record.name, img: null,
-        id: record.id, price: record.price, unit: record.unit, barcode: record.barcode });
+        this.setState({
+            updateVisible: true,
+            name: record.name,
+            img: null,
+            id: record.id,
+            price: record.price,
+            unit: record.unit,
+            barcode: record.barcode,
+            description: record.description
+        });
     };
 
     onCloseUpdate = () => {
-        this.setState({ updateVisible: false,  name: null, img: null,
-            id: null, price: null, unit: null, barcode: null });
+        this.setState({
+            updateVisible: false, name: null, img: null,
+            id: null, price: null, unit: null, barcode: null, description: null
+        });
     };
 
     update = data => {
 
         let token = 'Bearer ' + this.props.token;
-            let data1 = {
-                id: this.state.id,
-                name: this.state.name,
-                price: this.state.price,
-                unit: this.state.unit,
-                barcode: this.state.barcode
-            };
-            console.log(this.state);
-            console.log(data1);
-            axios.defaults.headers.common['Authorization'] = token;
-            axios.defaults.headers.common['Content-Type'] = "application/json";
-            const fd = new FormData();
-            if(this.state.img != null) fd.append('image', this.state.img, this.state.img.name);
-            axios.defaults.headers.common['Content-Type'] = "multipart/form-data";
-            axios.put('https://main-server-si.herokuapp.com/api/products/' + this.state.id, data1).then(p1 => {
-                console.log(p1);
+        let data1 = {
+            id: this.state.id,
+            name: this.state.name,
+            price: this.state.price,
+            unit: this.state.unit,
+            barcode: this.state.barcode,
+            description: this.state.description
+        };
+        console.log(this.state);
+        console.log(data1);
+        axios.defaults.headers.common['Authorization'] = token;
+        axios.defaults.headers.common['Content-Type'] = "application/json";
+        const fd = new FormData();
+        if (this.state.img != null) fd.append('image', this.state.img, this.state.img.name);
+        axios.defaults.headers.common['Content-Type'] = "multipart/form-data";
+        axios.put('https://main-server-si.herokuapp.com/api/products/' + this.state.id, data1).then(p1 => {
+            console.log(p1);
 
-                const fd = new FormData();
-                if(this.state.img != null ) {
-                    fd.append('image', this.state.img, this.state.img.name);
-                    axios.defaults.headers.common["Content-Type"] = "multipart/form-data";
-                    let data2 = {
-                        productId: this.state.id,
-                        productName: this.state.name,
-                        productPrice: this.state.price,
-                        productUnit: this.state.unit,
-                        barcode: this.state.barcode
-                    };
-                    axios.post('https://main-server-si.herokuapp.com/api/products/' +
-                        data2.productId.toString() + '/image', fd
-                    ).then(pic => {
-                        message.success("You successfully changed product!");
-                        this.onCloseUpdate();
-                    }).catch(er3 => {
-                        console.log("ERROR 3: "+er3);
-                        message.error("Unable to add product picture!", [0.7]);
-                    })
-                } else {
+            const fd = new FormData();
+            if (this.state.img != null) {
+                fd.append('image', this.state.img, this.state.img.name);
+                axios.defaults.headers.common["Content-Type"] = "multipart/form-data";
+                let data2 = {
+                    productId: this.state.id,
+                    productName: this.state.name,
+                    productPrice: this.state.price,
+                    productUnit: this.state.unit,
+                    barcode: this.state.barcode,
+                    description: this.state.description
+                };
+                axios.post('https://main-server-si.herokuapp.com/api/products/' +
+                    data2.productId.toString() + '/image', fd
+                ).then(pic => {
                     message.success("You successfully changed product!");
                     this.onCloseUpdate();
-                }
-            }).catch(er1 => {
-                console.log("ERROR 1: "+er1);
-                message.error("Unable to add product!", [0.7]);
-            }).then(() => {
-                fetch(API)
-                    .then(response => response.json())
-                    .then(data => this.setState({ products: data, isLoading: false }));
-            });
+                }).catch(er3 => {
+                    console.log("ERROR 3: " + er3);
+                    message.error("Unable to add product picture!", [0.7]);
+                })
+            } else {
+                message.success("You successfully changed product!");
+                this.onCloseUpdate();
+            }
+        }).catch(er1 => {
+            console.log("ERROR 1: " + er1);
+            message.error("Unable to add product!", [0.7]);
+        }).then(() => {
+            fetch(API)
+                .then(response => response.json())
+                .then(data => this.setState({products: data, isLoading: false}));
+        });
     }
 
     getCurrentQuantity = id => {
         let token = 'Bearer ' + this.props.token;
         axios.defaults.headers.common["Authorization"] = token;
         axios.defaults.headers.common["Content-Type"] = "application/json";
-        axios.post('https://main-server-si.herokuapp.com/api/warehouse', { productId: id, quantity: 0 }).then(p => {
-            this.setState({ currentQuantity: p.data.quantity });
+        axios.post('https://main-server-si.herokuapp.com/api/warehouse', {productId: id, quantity: 0}).then(p => {
+            this.setState({currentQuantity: p.data.quantity});
         }).catch(err => {
             console.log("ERROR: " + err);
             message.error("Unable to get product quantity!", [0.7]);
@@ -226,8 +245,11 @@ export default class ProductsTable extends Component {
         let token = 'Bearer ' + this.props.token;
         axios.defaults.headers.common["Authorization"] = token;
         axios.defaults.headers.common["Content-Type"] = "application/json";
-        axios.post('https://main-server-si.herokuapp.com/api/warehouse', { productId: id, quantity: this.state.addQuantity }).then(p => {
-            this.setState({ currentQuantity: p.data.quantity });
+        axios.post('https://main-server-si.herokuapp.com/api/warehouse', {
+            productId: id,
+            quantity: this.state.addQuantity
+        }).then(p => {
+            this.setState({currentQuantity: p.data.quantity});
             this.onCloseModal();
             message.success("You successfully changed quantity!", [0.7]);
         }).catch(err => {
@@ -235,7 +257,6 @@ export default class ProductsTable extends Component {
             message.error("Unable to change product quantity!", [0.7]);
         })
     }
-
 
 
     renderUpdate = record => {
@@ -250,97 +271,116 @@ export default class ProductsTable extends Component {
                     onCancel={() => this.onCloseUpdate()}
                 >
                     <Form
-                            initialValues={{
-                                remember: true,
-                            }}
+                        initialValues={{
+                            remember: true,
+                        }}
+                    >
+
+                        <Form.Item
+                            name="productImage"
                         >
+                            <FileUploader
+                                updateImg={this.updateImg}
+                                className="add-form-input"/>
+                        </Form.Item>
+                        <Form.Item
+                            name="productName"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter product name!",
 
-                            <Form.Item
-                                name="productImage"
-                            >
-                                <FileUploader
-                                    updateImg={this.updateImg}
-                                    className="add-form-input"/>
-                            </Form.Item>
-                            <Form.Item
-                                name="productName"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter product name!",
+                                },
+                            ]}
+                        >
+                            <Input
+                                className="add-form-input"
+                                name="name"
+                                id="name"
+                                value={this.state.name} onChange={this.handleNameChange}
+                                defaultValue={record.name}
+                                placeholder="Product name"/>
+                        </Form.Item>
+                        <Form.Item
+                            name="productPrice"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter product price!",
 
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    className="add-form-input"
-                                    name="name"
-                                    id="name"
-                                    value={this.state.name} onChange={this.handleNameChange}
-                                    defaultValue={record.name}
-                                    placeholder="Product name"/>
-                            </Form.Item>
-                            <Form.Item
-                                name="productPrice"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please enter product price!",
-
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    className="add-form-input"
-                                    name="price"
-                                    type="number"
-                                    id="price"
-                                    min={0}
-                                    value={this.state.price}
-                                    onChange={this.handlePriceChange}
-                                    defaultValue={record.price}
-                                    step={0.05}
-                                    placeholder="Price"
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                name="productUnit"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Please select a unit!",
-                                    },
-                                ]}
-                            >
-                                <Input id="unit" name="unit" placeholder="Unit"
-                                value={this.state.unit}
-                                onChange={this.handleUnitChange}
-                                defaultValue={record.unit}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                name="productBarcode"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Enter a 13 digit number!",
-                                        pattern: /^(?=.*[0-9]).{13,}$/,
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    className="add-form-input"
-                                    name="barcode"
-                                    id="barcode"
-                                    value={this.state.barcode}
-                                    onChange={this.handleBarcodeChange}
-                                    defaultValue={record.barcode}
-                                    placeholder="Barcode"
-                                />
-                            </Form.Item>
-
-                        </Form>
-                </Modal >
+                                },
+                            ]}
+                        >
+                            <Input
+                                className="add-form-input"
+                                name="price"
+                                type="number"
+                                id="price"
+                                min={0}
+                                value={this.state.price}
+                                onChange={this.handlePriceChange}
+                                defaultValue={record.price}
+                                step={0.05}
+                                placeholder="Price"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="productUnit"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select a unit!",
+                                },
+                            ]}
+                        >
+                            <Input id="unit" name="unit" placeholder="Unit"
+                                   value={this.state.unit}
+                                   onChange={this.handleUnitChange}
+                                   defaultValue={record.unit}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="productBarcode"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Enter a 13 digit number!",
+                                    pattern: /^(?=.*[0-9]).{13,}$/,
+                                },
+                            ]}
+                        >
+                            <Input
+                                className="add-form-input"
+                                name="barcode"
+                                id="barcode"
+                                value={this.state.barcode}
+                                onChange={this.handleBarcodeChange}
+                                defaultValue={record.barcode}
+                                placeholder="Barcode"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="productDescription"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Enter a description!",
+                                },
+                            ]}
+                        >
+                            <Input
+                                className="add-form-input"
+                                name="description"
+                                id="description"
+                                value={this.state.description}
+                                onChange={this.handleDescriptionChange}
+                                defaultValue={record.description}
+                                placeholder="Description"
+                                autoSize={{minRows: 2}}
+                            />
+                        </Form.Item>
+                    </Form>
+                </Modal>
             );
         }
     };
@@ -364,8 +404,10 @@ export default class ProductsTable extends Component {
                         <p>Product barcode: {record.barcode}</p>
                         <p>Product unit: {record.unit}</p>
                         <p>Product price: {record.price}</p>
+                        <p>Product description:</p>
+                        <p>{record.description}</p>
                     </div>
-                    <img className="modalPicture" alt={record.image} src={record.image} />
+                    <img className="modalPicture" alt={record.image} src={record.image}/>
                     <p className="currentQuantity">Current product quantity: {this.state.currentQuantity}</p>
                     <Form>
                         <Form.Item
@@ -389,17 +431,17 @@ export default class ProductsTable extends Component {
                             />
                         </Form.Item>
                     </Form>
-                </Modal >
+                </Modal>
             );
         }
     };
 
 
     componentDidMount() {
-        this.setState({ isLoading: true });
+        this.setState({isLoading: true});
         fetch(API)
             .then(response => response.json())
-            .then(data => this.setState({ products: data, isLoading: false }));
+            .then(data => this.setState({products: data, isLoading: false}));
     }
 
     handleDelete = record => {
@@ -410,12 +452,12 @@ export default class ProductsTable extends Component {
             .then(response => {
                 message.success("You successfully deleted a product!")
             }).catch(er => {
-                message.error("Unable to remove product!");
-            }).then(() => {
-                fetch(API)
-                    .then(response => response.json())
-                    .then(data => this.setState({ products: data, isLoading: false }));
-            });
+            message.error("Unable to remove product!");
+        }).then(() => {
+            fetch(API)
+                .then(response => response.json())
+                .then(data => this.setState({products: data, isLoading: false}));
+        });
     };
 
     render() {
@@ -424,9 +466,9 @@ export default class ProductsTable extends Component {
         return (
             <Layout>
                 <MyHeader loggedInStatus={this.props.loggedInStatus}
-                    token={this.props.token}
-                    username={this.props.username}
-                    handleLogout={this.props.handleLogout} />
+                          token={this.props.token}
+                          username={this.props.username}
+                          handleLogout={this.props.handleLogout}/>
                 <div className="ant-table">
                     <Table
                         dataSource={dataSource}
@@ -434,7 +476,7 @@ export default class ProductsTable extends Component {
                         rowKey="id"
                     />
                 </div>
-                <Footer />
+                <Footer/>
             </Layout>
         );
     }
