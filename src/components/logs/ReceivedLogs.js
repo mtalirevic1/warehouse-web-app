@@ -3,12 +3,14 @@ import axios from "axios";
 import {Layout, Table, message} from "antd";
 import MyHeader from "../header/MyHeader";
 import Footer from "../footer/Footer";
+import moment from "moment";
 
 
 export default class ReceivedLogs extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
             columns: [
                 {
@@ -25,6 +27,20 @@ export default class ReceivedLogs extends Component {
                     key: '3',
                     title: 'Collection date',
                     dataIndex: 'date',
+                    sorter: (a, b) => {
+                        const day = parseInt(a.date.substr(0, 2));
+                        const month = parseInt(a.date.substr(3, 5)) - 1;
+                        const year = parseInt(a.date.substr(6, 10));
+                        const Date1 = new Date(year, month, day);
+    
+                        const day2 = parseInt(b.date.substr(0, 2));
+                        const month2 = parseInt(b.date.substr(3, 5)) - 1;
+                        const year2 = parseInt(b.date.substr(6, 10));
+                        const Date2 = new Date(year2, month2, day2);
+    
+                        return Date1 < Date2;
+                    },
+
                 },
                 {
                     key: '4',
