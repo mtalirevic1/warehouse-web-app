@@ -1,5 +1,7 @@
-import React, {Component} from 'react'
-import {Table, Layout, Popconfirm, message, Modal, Form, Input} from 'antd';
+import React, { Component } from 'react'
+import { Table, Layout, Popconfirm, message, Modal, Form, Input, Button } from 'antd';
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import MyHeader from "../header/MyHeader";
 import Footer from "../footer/Footer";
@@ -22,31 +24,43 @@ export default class ProductsTable extends Component {
                 {
                     title: 'ID',
                     dataIndex: 'id',
+                    ...this.getColumnSearchProps('id'),
+                    sorter: (a, b) => a.id - b.id,
                     width: '10%'
                 },
                 {
                     title: 'Name',
                     dataIndex: 'name',
+                    ...this.getColumnSearchProps('name'),
+                    sorter: (a, b) => a.name.localeCompare(b.name),
                     width: '15%'
                 },
                 {
                     title: 'Barcode',
                     dataIndex: 'barcode',
+                    ...this.getColumnSearchProps('barcode'),
+                    sorter: (a, b) => a.barcode.localeCompare(b.barcode),
                     width: '15%'
                 },
                 {
                     title: 'Unit',
                     dataIndex: 'unit',
+                    ...this.getColumnSearchProps('unit'),
+                    sorter: (a, b) => a.unit.localeCompare(b.unit),
+                    width: '10%'
                 },
                 {
                     title: 'Price',
                     dataIndex: 'price',
+                    ...this.getColumnSearchProps('price'),
+                    sorter: (a, b) => a.price - b.price,
+                    width: '10%'
                 },
                 {
                     title: 'Picture',
                     dataIndex: 'image',
                     render: theImageURL => <img className="productPicture" alt={theImageURL} src={theImageURL}
-                                                width="40" height="40"/>
+                        width="40" height="40" />
                 },
                 {
                     title: 'Change quantity',
@@ -101,7 +115,10 @@ export default class ProductsTable extends Component {
             unit: null,
             id: null,
             barcode: null,
-            description: null
+            description: null,
+
+            searchText: '',
+            searchedColumn: ''
         };
 
         this.handleQuantityChange = this.handleQuantityChange.bind(this);
@@ -120,35 +137,35 @@ export default class ProductsTable extends Component {
     }
 
     handleQuantityChange(event) {
-        this.setState({addQuantity: event.target.value});
+        this.setState({ addQuantity: event.target.value });
     }
 
     handleNameChange(event) {
-        this.setState({name: event.target.value});
+        this.setState({ name: event.target.value });
     }
 
     handlePriceChange(event) {
-        this.setState({price: event.target.value});
+        this.setState({ price: event.target.value });
     }
 
     handleUnitChange(event) {
-        this.setState({unit: event.target.value});
+        this.setState({ unit: event.target.value });
     }
 
     handleBarcodeChange(event) {
-        this.setState({barcode: event.target.value});
+        this.setState({ barcode: event.target.value });
     }
 
     handleDescriptionChange(event) {
-        this.setState({description: event.target.value});
+        this.setState({ description: event.target.value });
     }
 
     onCloseModal = () => {
-        this.setState({modalVisible: false, activeItemId: null, currentQuantity: null, addQuantity: null});
+        this.setState({ modalVisible: false, activeItemId: null, currentQuantity: null, addQuantity: null });
     };
 
     onOpenModal = id => {
-        this.setState({modalVisible: true, activeItemId: id})
+        this.setState({ modalVisible: true, activeItemId: id })
         this.getCurrentQuantity(id);
     };
 
@@ -224,7 +241,7 @@ export default class ProductsTable extends Component {
         }).then(() => {
             fetch(API)
                 .then(response => response.json())
-                .then(data => this.setState({products: data, isLoading: false}));
+                .then(data => this.setState({ products: data, isLoading: false }));
         });
     }
 
@@ -232,8 +249,8 @@ export default class ProductsTable extends Component {
         let token = 'Bearer ' + this.props.token;
         axios.defaults.headers.common["Authorization"] = token;
         axios.defaults.headers.common["Content-Type"] = "application/json";
-        axios.post('https://main-server-si.herokuapp.com/api/warehouse', {productId: id, quantity: 0}).then(p => {
-            this.setState({currentQuantity: p.data.quantity});
+        axios.post('https://main-server-si.herokuapp.com/api/warehouse', { productId: id, quantity: 0 }).then(p => {
+            this.setState({ currentQuantity: p.data.quantity });
         }).catch(err => {
             console.log("ERROR: " + err);
             message.error("Unable to get product quantity!", [0.7]);
@@ -249,7 +266,7 @@ export default class ProductsTable extends Component {
             productId: id,
             quantity: this.state.addQuantity
         }).then(p => {
-            this.setState({currentQuantity: p.data.quantity});
+            this.setState({ currentQuantity: p.data.quantity });
             this.onCloseModal();
             message.success("You successfully changed quantity!", [0.7]);
         }).catch(err => {
@@ -281,7 +298,7 @@ export default class ProductsTable extends Component {
                         >
                             <FileUploader
                                 updateImg={this.updateImg}
-                                className="add-form-input"/>
+                                className="add-form-input" />
                         </Form.Item>
                         <Form.Item
                             name="productName"
@@ -299,7 +316,7 @@ export default class ProductsTable extends Component {
                                 id="name"
                                 value={this.state.name} onChange={this.handleNameChange}
                                 defaultValue={record.name}
-                                placeholder="Product name"/>
+                                placeholder="Product name" />
                         </Form.Item>
                         <Form.Item
                             name="productPrice"
@@ -334,9 +351,9 @@ export default class ProductsTable extends Component {
                             ]}
                         >
                             <Input id="unit" name="unit" placeholder="Unit"
-                                   value={this.state.unit}
-                                   onChange={this.handleUnitChange}
-                                   defaultValue={record.unit}
+                                value={this.state.unit}
+                                onChange={this.handleUnitChange}
+                                defaultValue={record.unit}
                             />
                         </Form.Item>
                         <Form.Item
@@ -376,7 +393,7 @@ export default class ProductsTable extends Component {
                                 onChange={this.handleDescriptionChange}
                                 defaultValue={record.description}
                                 placeholder="Description"
-                                autoSize={{minRows: 2}}
+                                autoSize={{ minRows: 2 }}
                             />
                         </Form.Item>
                     </Form>
@@ -407,7 +424,7 @@ export default class ProductsTable extends Component {
                         <p>Product description:</p>
                         <p>{record.description}</p>
                     </div>
-                    <img className="modalPicture" alt={record.image} src={record.image}/>
+                    <img className="modalPicture" alt={record.image} src={record.image} />
                     <p className="currentQuantity">Current product quantity: {this.state.currentQuantity}</p>
                     <Form>
                         <Form.Item
@@ -436,12 +453,75 @@ export default class ProductsTable extends Component {
         }
     };
 
+    getColumnSearchProps = dataIndex => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div style={{ padding: 8 }}>
+                <Input
+                    ref={node => {
+                        this.searchInput = node;
+                    }}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{ width: 188, marginBottom: 8, display: 'block' }}
+                />
+                <Button
+                    type="primary"
+                    onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+                    icon={<SearchOutlined />}
+                    size="small"
+                    style={{ width: 90, marginRight: 8 }}
+                >
+                    Search
+            </Button>
+                <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+                    Reset
+            </Button>
+            </div>
+        ),
+        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        onFilter: (value, record) =>
+            record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes(value.toLowerCase()),
+        onFilterDropdownVisibleChange: visible => {
+            if (visible) {
+                setTimeout(() => this.searchInput.select());
+            }
+        },
+        render: text =>
+            this.state.searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[this.state.searchText]}
+                    autoEscape
+                    textToHighlight={text.toString()}
+                />
+            ) : (
+                    text
+                ),
+    });
+
+    handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        this.setState({
+            searchText: selectedKeys[0],
+            searchedColumn: dataIndex,
+        });
+    };
+
+    handleReset = clearFilters => {
+        clearFilters();
+        this.setState({ searchText: '' });
+    };
 
     componentDidMount() {
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
         fetch(API)
             .then(response => response.json())
-            .then(data => this.setState({products: data, isLoading: false}));
+            .then(data => this.setState({ products: data, isLoading: false }));
     }
 
     handleDelete = record => {
@@ -452,12 +532,12 @@ export default class ProductsTable extends Component {
             .then(response => {
                 message.success("You successfully deleted a product!")
             }).catch(er => {
-            message.error("Unable to remove product!");
-        }).then(() => {
-            fetch(API)
-                .then(response => response.json())
-                .then(data => this.setState({products: data, isLoading: false}));
-        });
+                message.error("Unable to remove product!");
+            }).then(() => {
+                fetch(API)
+                    .then(response => response.json())
+                    .then(data => this.setState({ products: data, isLoading: false }));
+            });
     };
 
     render() {
@@ -466,9 +546,9 @@ export default class ProductsTable extends Component {
         return (
             <Layout>
                 <MyHeader loggedInStatus={this.props.loggedInStatus}
-                          token={this.props.token}
-                          username={this.props.username}
-                          handleLogout={this.props.handleLogout}/>
+                    token={this.props.token}
+                    username={this.props.username}
+                    handleLogout={this.props.handleLogout} />
                 <div className="ant-table">
                     <Table
                         dataSource={dataSource}
@@ -476,7 +556,7 @@ export default class ProductsTable extends Component {
                         rowKey="id"
                     />
                 </div>
-                <Footer/>
+                <Footer />
             </Layout>
         );
     }
