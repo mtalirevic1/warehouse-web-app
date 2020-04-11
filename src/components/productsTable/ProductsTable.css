@@ -1,6 +1,6 @@
 .ant-table {
-  margin-top: 40px;
   margin-bottom: 30px;
+  background-color: whitesmoke;
 }
 
 .productPicture {
@@ -46,6 +46,14 @@ p {
   margin-top: 30px;
   color: #0150ac;
   font-weight: bold;
+}
+
+
+.add {
+  margin-top: 40px;
+  margin-left: 20px;
+  width: 100%;
+  background-color: whitesmoke;
 }
 
 /*

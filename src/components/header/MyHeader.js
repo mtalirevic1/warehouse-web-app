@@ -31,9 +31,6 @@ const MyHeader = props => {
                         key="sub1"
                         title={<span><ShoppingCartOutlined style={{width: '20px', height: '20px'}}/>Products</span>}
                     >
-                        <Menu.Item key="1" style={{marginTop: "0", paddingTop: "0"}}>
-                            <Link to='/addProduct'>Add new product</Link>
-                        </Menu.Item>
                         <Menu.Item key="2">
                             <Link to='/productsTable'>Display products</Link>
                         </Menu.Item>
