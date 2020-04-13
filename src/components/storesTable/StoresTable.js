@@ -6,6 +6,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import './StoresTable.css';
 import Footer from "../footer/Footer";
 import MyHeader from "../header/MyHeader";
+import {exportPDF} from "../manifest/Manifest";
 
 const API = 'https://main-server-si.herokuapp.com/api/business/offices';
 
@@ -130,7 +131,7 @@ export default class StoresTable extends Component {
         var newArray = this.state.addQuantity;
         if  (number !== -1)
             newArray[number] = parseInt(event.target.value);
-        else 
+        else
             newArray = [];
         this.setState({ addQuantity: newArray });
     }
@@ -147,7 +148,7 @@ export default class StoresTable extends Component {
                 newArrayQuantities[number] = quantity;
                 newArrayProducts[number] = id;
             }
-        } else { 
+        } else {
             newArrayQuantities = [];
             newArrayProducts = []
         }
@@ -321,7 +322,7 @@ export default class StoresTable extends Component {
 
                 >
                     <div>
-                        
+
                     </div>
                     <ParentComponent addChild={this.onAddChild}>
                         {children}
@@ -330,7 +331,7 @@ export default class StoresTable extends Component {
             );
         }
     };
-    
+
 
     onAddChild = () => {
         this.setState({
@@ -342,9 +343,10 @@ export default class StoresTable extends Component {
     onProductSelected = (number, option) => {
         this.handleSelect(number, option.quantity, option.id)
     }
-    
+
 
     handleTransferProducts(storeId, quantitiesToAdd, quantitiesOnWarehouse) {
+        var products=[];
         for (var count = 0; count < quantitiesToAdd.length; count++){
             var quantityToAdd = quantitiesToAdd[count];
             var maxAllowed = quantitiesOnWarehouse[count];
@@ -361,17 +363,31 @@ export default class StoresTable extends Component {
                 message.success("Successfully transferred products");
                 var length = that.state.warehouseProducts.length;
                 for (var i = 0; i < length; i++) {
-                    if (that.state.warehouseProducts[i].productId === productId)
+                    if (that.state.warehouseProducts[i].productId === productId) {
                         that.state.warehouseProducts[i].quantity -= quantityToAdd;
+                        console.log("PRODUCT: " + that.state.warehouseProducts[i].productId+" QUANTITY: "+quantityToAdd);
+                    }
                 }
                 that.state.warehouseProducts = that.state.warehouseProducts.filter(function (item) {
                     return item.quantity !== 0;
-                });                    
+                });
             }, (e) => {
                 message.error(e);
             });
         }
+        var length=this.state.warehouseProducts.length;
+        for(var j=0; j<length;j++){
+            for(var k=0;k<quantitiesToAdd.length;k++){
+                if(this.state.productIds[k]===this.state.warehouseProducts[j].productId){
+                    let product={name: this.state.warehouseProducts[j].productName, quantity: quantitiesToAdd[k]};
+                    products.push(product);
+                }
+            }
+        }
+        console.log(products);
+        exportPDF(products);
         this.onCloseTransferProductsModal();
+
     }
     render() {
         const dataSource = this.state.offices;
@@ -403,7 +419,7 @@ const ParentComponent = props => (
       </div>
     </div>
   );
-  
+
   const ChildComponent = props => <div>Product:
                                         {<AutoComplete
                                             style={{ width: 300 }}
