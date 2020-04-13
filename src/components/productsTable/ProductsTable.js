@@ -93,13 +93,14 @@ export default class ProductsTable extends Component {
             isLoadingUpdate: false,
             updateVisible: false,
             activeItem: null,
-            
+
             img: null,
             name: null,
             price: null,
             unit: null,
             id: null,
             barcode: null,
+            description: null,
 
             addVisible: false,
             addImg: null,
@@ -112,12 +113,13 @@ export default class ProductsTable extends Component {
         };
 
         this.handleQuantityChange = this.handleQuantityChange.bind(this);
-        
+
         this.updateImg = this.updateImg.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handlePriceChange = this.handlePriceChange.bind(this);
         this.handleUnitChange = this.handleUnitChange.bind(this);
         this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
+        this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
 
         this.updateAddImg = this.updateAddImg.bind(this);
         this.handleAddName = this.handleAddName.bind(this);
@@ -152,6 +154,10 @@ export default class ProductsTable extends Component {
 
     handleBarcodeChange(event) {
         this.setState({barcode: event.target.value});
+    }
+
+    handleDescriptionChange(event){
+        this.setState({description: event.target.value});
     }
 
     updateAddImg(data) {
@@ -195,12 +201,12 @@ export default class ProductsTable extends Component {
 
     onOpenUpdate = record => {
         this.setState({ updateVisible: true, name: record.name, img: null,
-        id: record.id, price: record.price, unit: record.unit, barcode: record.barcode });
+        id: record.id, price: record.price, unit: record.unit, barcode: record.barcode, description: record.description });
     };
 
     onCloseUpdate = () => {
         this.setState({ updateVisible: false,  name: null, img: null,
-            id: null, price: null, unit: null, barcode: null });
+            id: null, price: null, unit: null, barcode: null, description: null });
     };
 
     onOpenAdd =  () => {
@@ -264,7 +270,7 @@ export default class ProductsTable extends Component {
                     .then(response => response.json())
                     .then(data => this.setState({ products: data, isLoading: false }));
             });
-            
+
     }
 
     update = data => {
@@ -275,7 +281,8 @@ export default class ProductsTable extends Component {
                 name: this.state.name,
                 price: this.state.price,
                 unit: this.state.unit,
-                barcode: this.state.barcode
+                barcode: this.state.barcode,
+                description: this.state.description
             };
             console.log(this.state);
             console.log(data1);
@@ -348,7 +355,7 @@ export default class ProductsTable extends Component {
         })
     }
 
-    
+
 
     renderUpdate = record => {
         if (this.state.id === record.id) {
@@ -424,7 +431,7 @@ export default class ProductsTable extends Component {
                                     },
                                 ]}
                             >
-                                <Input id="unit" name="unit" placeholder="Unit" 
+                                <Input id="unit" name="unit" placeholder="Unit"
                                 value={this.state.unit}
                                 onChange={this.handleUnitChange}
                                 defaultValue={record.unit}
@@ -450,7 +457,15 @@ export default class ProductsTable extends Component {
                                     placeholder="Barcode"
                                 />
                             </Form.Item>
-                            
+                        <Form.Item
+                            name="productDescription"
+                        >
+                            <Input id="description" name="description" placeholder="Description"
+                                   value={this.state.description}
+                                   defaultValue={this.state.description}
+                                   onChange={this.handleDescriptionChange}
+                            />
+                        </Form.Item>
                         </Form>
                 </Modal >
             );
@@ -476,6 +491,8 @@ export default class ProductsTable extends Component {
                         <p>Product barcode: {record.barcode}</p>
                         <p>Product unit: {record.unit}</p>
                         <p>Product price: {record.price}</p>
+                        <p>Product description:</p>
+                        <p>{record.description}</p>
                     </div>
                     <img className="modalPicture" alt={record.image} src={record.image} />
                     <p className="currentQuantity">Current product quantity: {this.state.currentQuantity}</p>
@@ -616,7 +633,7 @@ export default class ProductsTable extends Component {
                                     },
                                 ]}
                             >
-                                <Input id="unit" name="unit" placeholder="Unit" 
+                                <Input id="unit" name="unit" placeholder="Unit"
                                 value={this.state.addUnit}
                                 defaultValue={this.state.addUnit}
                                 onChange={this.handleAddUnit}
@@ -631,7 +648,7 @@ export default class ProductsTable extends Component {
                                     },
                                 ]}
                             >
-                                <Input type="number" min={0} step={1} id="quantity" name="quantity" placeholder="Quantity" 
+                                <Input type="number" min={0} step={1} id="quantity" name="quantity" placeholder="Quantity"
                                 value={this.state.addNumber}
                                 defaultValue={this.state.addNumber}
                                 onChange={this.handleAddQuantity}
@@ -661,7 +678,7 @@ export default class ProductsTable extends Component {
                             <Form.Item
                                 name="productDecsription"
                             >
-                                <Input id="description" name="description" placeholder="Description" 
+                                <Input id="description" name="description" placeholder="Description"
                                 value={this.state.addDescription}
                                 defaultValue={this.state.addDescription}
                                 onChange={this.handleAddDescription}
@@ -670,8 +687,8 @@ export default class ProductsTable extends Component {
                         </Form>
                     </Modal >
                 </div>
-                
-                
+
+
                     <Table
                         dataSource={dataSource}
                         columns={columns}
