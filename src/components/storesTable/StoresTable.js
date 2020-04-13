@@ -114,23 +114,44 @@ export default class StoresTable extends Component {
             transferModalVisible: false,
             activeItemId: null,
             warehouseProducts: [],
-            quantityOfSelectedProduct: 0,
-            addQuantity: 0,
-            productId: null,
+            quantityOfSelectedProduct: [],
+            addQuantity: [],
+            productIds: [],
             searchText: '',
-            searchedColumn: ''
+            searchedColumn: '',
+            numChildren: 1,
         };
         this.handleSelect = this.handleSelect.bind(this);
         this.handleQuantityChange = this.handleQuantityChange.bind(this);
         this.handleTransferProducts = this.handleTransferProducts.bind(this);
     }
 
-    handleQuantityChange(event) {
-        this.setState({ addQuantity: event.target.value });
+    handleQuantityChange(number, event) {
+        var newArray = this.state.addQuantity;
+        if  (number !== -1)
+            newArray[number] = parseInt(event.target.value);
+        else 
+            newArray = [];
+        this.setState({ addQuantity: newArray });
     }
 
-    handleSelect(quantity, id) {
-        this.setState({ quantityOfSelectedProduct: quantity, productId: id });
+    handleSelect(number, quantity, id) {
+        console.log(number, quantity, id)
+        var newArrayQuantities = this.state.quantityOfSelectedProduct;
+        var newArrayProducts = this.state.productIds;
+        if  (number !== -1){
+            if( number >= newArrayQuantities.length){
+                newArrayQuantities.push(quantity);
+                newArrayProducts.push(id);
+            } else{
+                newArrayQuantities[number] = quantity;
+                newArrayProducts[number] = id;
+            }
+        } else { 
+            newArrayQuantities = [];
+            newArrayProducts = []
+        }
+        this.setState({ quantityOfSelectedProduct: newArrayQuantities, productIds: newArrayProducts });
     }
 
     onOpenModal = id => {
@@ -147,7 +168,9 @@ export default class StoresTable extends Component {
     };
 
     onCloseTransferProductsModal = () => {
-        this.setState({ transferModalVisible: false, activeItemId: null });
+        this.handleSelect(-1);
+        this.handleQuantityChange(-1);
+        this.setState({transferModalVisible: false, activeItemId: null, productIds: [], numChildren: 1 });
     };
 
     getColumnSearchProps = dataIndex => ({
@@ -278,6 +301,13 @@ export default class StoresTable extends Component {
                 quantity: item.quantity
             });
         });
+
+        const children = [];
+
+        for (var i = 0; i < this.state.numChildren; i++) {
+            children.push(<ChildComponent that={this} options={options} key={i} number={i} />);
+        };
+
         if (this.state.activeItemId === record.id) {
             return (
                 <Modal
@@ -288,87 +318,60 @@ export default class StoresTable extends Component {
                     onCancel={() => this.onCloseTransferProductsModal()}
                     onOk={() => this.handleTransferProducts(this.state.activeItemId, this.state.addQuantity, this.state.quantityOfSelectedProduct)}
                     okText="Transfer"
+
                 >
                     <div>
-                        Product:
-                        {<AutoComplete
-                            style={{ width: 300 }}
-                            options={options}
-                            placeholder="Enter product name"
-                            filterOption={(inputValue, option) =>
-                                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-                            }
-                            onSelect={this.onProductSelected}
-
-                        />}
+                        
                     </div>
-                    {
-                        this.state.quantityOfSelectedProduct !== 0 ?
-                            <p>
-                                Quantity of selected item in warehouse: {this.state.quantityOfSelectedProduct}
-                            </p>
-                            : null
-                    }
-                    <Form>
-                        <Form.Item
-                            name="productQuantity"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please enter the quantity!",
-
-                                },
-                            ]}
-                        >
-                            <p>Qunatity of products to transfer: </p>
-                            <Input
-                                value={this.state.addQuantity} onChange={this.handleQuantityChange}
-                                className="modal-form-input"
-                                id="number"
-                                type="number"
-                                max={this.state.quantityOfSelectedProduct}
-                                min={0}
-                                placeholder="quantity"
-                            />
-                        </Form.Item>
-                    </Form>
+                    <ParentComponent addChild={this.onAddChild}>
+                        {children}
+                    </ParentComponent>
                 </Modal >
             );
         }
     };
+    
 
-    onProductSelected = (value, option) => {
-        this.handleSelect(option.quantity, option.id)
+    onAddChild = () => {
+        this.setState({
+          numChildren: this.state.numChildren + 1,
+          addQuantity: [...this.state.addQuantity, 0],
+        });
+      }
+
+    onProductSelected = (number, option) => {
+        this.handleSelect(number, option.quantity, option.id)
     }
+    
 
-    handleTransferProducts(storeId, quantityToAdd, maxAllowed) {
-        if (quantityToAdd > maxAllowed || quantityToAdd < 0) {
-            message.error("Input not in allowed range");
-            return;
-        }
-        let token = 'Bearer ' + this.props.token;
-        axios.defaults.headers.common["Authorization"] = token;
-        axios.defaults.headers.common["Content-Type"] = "application/json";
-        console.log(storeId, this.state.productId, quantityToAdd);
-        var that = this;
-        axios.post('https://main-server-si.herokuapp.com/api/warehouse', { productId: this.state.productId, quantity: -quantityToAdd })
-            .then(() => {
-                that.state.warehouseProducts = that.state.warehouseProducts.filter(function (item) {
-                    return item.quantity !== 0;
-                });
+    handleTransferProducts(storeId, quantitiesToAdd, quantitiesOnWarehouse) {
+        for (var count = 0; count < quantitiesToAdd.length; count++){
+            var quantityToAdd = quantitiesToAdd[count];
+            var maxAllowed = quantitiesOnWarehouse[count];
+            var productId =this.state.productIds[count];
+            if (quantityToAdd > maxAllowed || quantityToAdd < 0) {
+                message.error("Input not in allowed range");
+                return;
+            }
+            let token = 'Bearer ' + this.props.token;
+            axios.defaults.headers.common["Authorization"] = token;
+            axios.defaults.headers.common["Content-Type"] = "application/json";
+            var that = this;
+            axios.post('https://main-server-si.herokuapp.com/api/inventory', { officeId: storeId, productId: productId, quantity: quantityToAdd }).then(() => {
+                message.success("Successfully transferred products");
                 var length = that.state.warehouseProducts.length;
                 for (var i = 0; i < length; i++) {
-                    if (that.state.warehouseProducts[i].productId === that.state.productId)
+                    if (that.state.warehouseProducts[i].productId === productId)
                         that.state.warehouseProducts[i].quantity -= quantityToAdd;
                 }
-                axios.post('https://main-server-si.herokuapp.com/api/inventory', { officeId: storeId, productId: that.state.productId, quantity: quantityToAdd }).then(() => {
-                    message.success("Successfully transferred products");
-                    this.handleSelect(null, null);
-                    that.setState({ addQunatity: null, transferModalVisible: false, activeItemId: null });
-                })
+                that.state.warehouseProducts = that.state.warehouseProducts.filter(function (item) {
+                    return item.quantity !== 0;
+                });                    
+            }, (e) => {
+                message.error(e);
             });
-
-
+        }
+        this.onCloseTransferProductsModal();
     }
     render() {
         const dataSource = this.state.offices;
@@ -390,4 +393,54 @@ export default class StoresTable extends Component {
         );
     }
 }
+
+
+const ParentComponent = props => (
+    <div >
+      <p><a href="#" onClick={props.addChild}>Add product to transfer</a></p>
+      <div id="children-pane">
+        {props.children}
+      </div>
+    </div>
+  );
+  
+  const ChildComponent = props => <div>Product:
+                                        {<AutoComplete
+                                            style={{ width: 300 }}
+                                            options={props.options}
+                                            placeholder="Enter product name"
+                                            filterOption={(inputValue, option) =>
+                                                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                                            }
+                                            onSelect={(value, option ) => props.that.onProductSelected(props.number, option)}
+
+                                        />}
+                                        {
+                                            <p>
+                                                Quantity of selected item in warehouse: {props.that.state.quantityOfSelectedProduct[props.number]}
+                                            </p>
+                                        }
+                                        <Form>
+                                            <Form.Item
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message: "Please enter the quantity!",
+
+                                                    },
+                                                ]}
+                                            >
+                                                <p>Qunatity of products to transfer: </p>
+                                                <Input
+                                                    value={props.that.state.addQuantity[props.number]} onChange={(e) =>props.that.handleQuantityChange(props.number, e)}
+                                                    className="modal-form-input"
+                                                    id="number"
+                                                    type="number"
+                                                    max={props.that.state.quantityOfSelectedProduct[props.number]}
+                                                    min={0}
+                                                    placeholder="quantity"
+                                                />
+                                            </Form.Item>
+                                        </Form>
+                                        </div>;
 
