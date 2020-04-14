@@ -375,11 +375,18 @@ export default class StoresTable extends Component {
                 message.error(e);
             });
         }
-        var length=this.state.warehouseProducts.length;
-        for(var j=0; j<length;j++){
-            for(var k=0;k<quantitiesToAdd.length;k++){
+        let offLen=this.state.offices.length, adr="";
+        for(let l=0; l<offLen;l++){
+            if(this.state.offices[l].id===storeId){
+                adr=this.state.offices[l].address;
+                break;
+            }
+        }
+        let length=this.state.warehouseProducts.length;
+        for(let j=0; j<length;j++){
+            for(let k=0;k<quantitiesToAdd.length;k++){
                 if(this.state.productIds[k]===this.state.warehouseProducts[j].productId){
-                    let product={name: this.state.warehouseProducts[j].productName, quantity: quantitiesToAdd[k]};
+                    let product={name: this.state.warehouseProducts[j].productName, quantity: quantitiesToAdd[k], address: adr};
                     products.push(product);
                 }
             }

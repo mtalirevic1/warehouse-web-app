@@ -13,9 +13,9 @@ import "jspdf-autotable";
         doc.setFontSize(15);
 
         const title = "Shipment Manifest";
-        const headers = [["Name", "Quantity"]];
+        const headers = [["Name", "Quantity","Location"]];
 
-        const data = products.map(elt => [elt.name, elt.quantity]);
+        const data = products.map(elt => [elt.name, elt.quantity, elt.address]);
 
         let content = {
             startY: 50,
