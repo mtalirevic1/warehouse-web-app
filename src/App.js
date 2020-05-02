@@ -1,16 +1,17 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import Login from './components/login/Login';
 import HomePage from './components/homePage/HomePage';
 
-import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import ProductsTable from "./components/productsTable/ProductsTable";
 import ReceivedLogs from "./components/logs/ReceivedLogs";
 import SentLogs from "./components/logs/SentLogs";
 import StoresTable from "./components/storesTable/StoresTable";
+import Notifications from "./components/notifications/Notifications";
 
 
-const ProtectedRoute = ({component: Comp, loggedInStatus, username, token, path, handleLogout, ...rest}) => {
+const ProtectedRoute = ({ component: Comp, loggedInStatus, username, token, notifications, path, handleLogout, handleAddNotification, handleDeleteNotification, ...rest }) => {
     return (
         <Route
             path={path}
@@ -22,11 +23,14 @@ const ProtectedRoute = ({component: Comp, loggedInStatus, username, token, path,
                         loggedInStatus={loggedInStatus}
                         token={token}
                         username={username}
+                        notifications={notifications}
                         handleLogout={handleLogout}
+                        handleAddNotification={handleAddNotification}
+                        handleDeleteNotification={handleDeleteNotification}
                     />
                     : <Redirect to={{
                         pathname: "/"
-                    }}/>;
+                    }} />;
             }}
         />
     );
@@ -39,27 +43,44 @@ class App extends Component {
         this.state = {
             loggedInStatus: "NOT_LOGGED_IN",
             username: "",
-            token: ""
+            token: "",
+            notifications: []
         };
 
         this.handleLogin = this.handleLogin.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
+        this.handleAddNotification = this.handleAddNotification.bind(this);
+        this.handleDeleteNotification = this.handleDeleteNotification.bind(this);
     }
 
     handleLogin(data) {
         this.setState({
             loggedInStatus: "LOGGED_IN",
             username: data.username,
-            token: data.token
+            token: data.token,
+            notifications: []
         })
     }
 
-     handleLogout() {
+    handleLogout() {
         this.setState({
             loggedInStatus: "NOT_LOGGED_IN",
             username: "",
-            token: ""
+            token: "",
+            notifications: []
         })
+    }
+
+    handleAddNotification(notification) {
+        const currentNotifications = this.state.notifications;
+        currentNotifications.unshift(notification);
+        this.setState({ notifications: currentNotifications });
+    }
+
+    handleDeleteNotification(index) {
+        const currentNotifications = this.state.notifications;
+        currentNotifications.splice(index, 1);
+        this.setState({ notifications: currentNotifications });
     }
 
     render() {
@@ -74,6 +95,8 @@ class App extends Component {
                             <Login
                                 {...props}
                                 handleLogin={this.handleLogin}
+                                handleAddNotification={this.handleAddNotification}
+                                handleDeleteNotification={this.handleDeleteNotification}
                             />
                         )}
                     />
@@ -83,8 +106,11 @@ class App extends Component {
                         loggedInStatus={this.state.loggedInStatus}
                         token={this.state.token}
                         username={this.state.username}
+                        notifications={this.state.notifications}
                         component={HomePage}
                         handleLogout={this.handleLogout}
+                        handleAddNotification={this.handleAddNotification}
+                        handleDeleteNotification={this.handleDeleteNotification}
                     />
 
                     <ProtectedRoute
@@ -93,8 +119,11 @@ class App extends Component {
                         loggedInStatus={this.state.loggedInStatus}
                         token={this.state.token}
                         username={this.state.username}
+                        notifications={this.state.notifications}
                         component={ProductsTable}
                         handleLogout={this.handleLogout}
+                        handleAddNotification={this.handleAddNotification}
+                        handleDeleteNotification={this.handleDeleteNotification}
                     />
 
                     <ProtectedRoute
@@ -103,8 +132,11 @@ class App extends Component {
                         loggedInStatus={this.state.loggedInStatus}
                         token={this.state.token}
                         username={this.state.username}
+                        notifications={this.state.notifications}
                         component={SentLogs}
                         handleLogout={this.handleLogout}
+                        handleAddNotification={this.handleAddNotification}
+                        handleDeleteNotification={this.handleDeleteNotification}
                     />
 
                     <ProtectedRoute
@@ -113,8 +145,11 @@ class App extends Component {
                         loggedInStatus={this.state.loggedInStatus}
                         token={this.state.token}
                         username={this.state.username}
+                        notifications={this.state.notifications}
                         component={ReceivedLogs}
                         handleLogout={this.handleLogout}
+                        handleAddNotification={this.handleAddNotification}
+                        handleDeleteNotification={this.handleDeleteNotification}
                     />
 
                     <ProtectedRoute
@@ -123,8 +158,23 @@ class App extends Component {
                         loggedInStatus={this.state.loggedInStatus}
                         token={this.state.token}
                         username={this.state.username}
+                        notifications={this.state.notifications}
                         component={StoresTable}
                         handleLogout={this.handleLogout}
+                        handleAddNotification={this.handleAddNotification}
+                        handleDeleteNotification={this.handleDeleteNotification}
+                    />
+                    <ProtectedRoute
+                        path="/notifications"
+                        exact
+                        loggedInStatus={this.state.loggedInStatus}
+                        token={this.state.token}
+                        username={this.state.username}
+                        notifications={this.state.notifications}
+                        component={Notifications}
+                        handleLogout={this.handleLogout}
+                        handleAddNotification={this.handleAddNotification}
+                        handleDeleteNotification={this.handleDeleteNotification}
                     />
                 </Router>
             </div>

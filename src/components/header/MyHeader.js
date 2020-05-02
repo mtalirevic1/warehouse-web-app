@@ -1,18 +1,18 @@
 import React from 'react';
 import './MyHeader.css';
-import {Layout, Menu} from 'antd';
+import { Layout, Menu } from 'antd';
 import {
     ShoppingCartOutlined,
     ShopOutlined,
-    BarChartOutlined,
     UserOutlined,
-    UnorderedListOutlined
+    UnorderedListOutlined,
+    NotificationOutlined
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import MenuItem from "antd/es/menu/MenuItem";
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const {Header} = Layout;
+const { Header } = Layout;
 
 const MyHeader = props => {
 
@@ -29,7 +29,7 @@ const MyHeader = props => {
                 >
                     <SubMenu
                         key="sub1"
-                        title={<span><ShoppingCartOutlined style={{width: '20px', height: '20px'}}/>Products</span>}
+                        title={<span><ShoppingCartOutlined style={{ width: '20px', height: '20px' }} />Products</span>}
                     >
                         <Menu.Item key="2">
                             <Link to='/productsTable'>Display products</Link>
@@ -38,37 +38,40 @@ const MyHeader = props => {
 
                     <SubMenu
                         key="sub2"
-                        title={<span><ShopOutlined style={{width: '20px', height: '20px'}}/>Stores</span>}
+                        title={<span><ShopOutlined style={{ width: '20px', height: '20px' }} />Stores</span>}
                     >
-                        <Menu.Item key="5">
+                        <Menu.Item key="3">
                             <Link to='/storesTable'>Display stores</Link>
                         </Menu.Item>
                     </SubMenu>
 
                     <SubMenu
                         key="sub3"
-                        title={<span><BarChartOutlined style={{width: '20px', height: '20px'}}/>Reports</span>}
+                        title={<span><UnorderedListOutlined style={{ width: '20px', height: '20px' }} />Logs</span>}
                     >
-                        <Menu.Item key="8">Display reports</Menu.Item>
-                    </SubMenu>
-                    <SubMenu
-                        key="sub4"
-                        title={<span><UnorderedListOutlined style={{width: '20px', height: '20px'}}/>Logs</span>}
-                    >
-                        <Menu.Item key="9">
+                        <Menu.Item key="4">
                             <Link to='/receivedLogs'>Display received product logs</Link>
                         </Menu.Item>
-                        <Menu.Item key="10">
+                        <Menu.Item key="5">
                             <Link to='/sentLogs'>Display sent product logs</Link>
                         </Menu.Item>
                     </SubMenu>
+                    <SubMenu
+                        key="sub4"
+                        title={<span><NotificationOutlined style={{ width: '20px', height: '20px' }} />Notifications</span>}
+                    >
+                        <Menu.Item key="6">
+                            <Link to='/notifications'>Display notifications</Link>
+                        </Menu.Item>
+                    </SubMenu>
+
                     <Menu.Item id="appName">
                         <Link to='/homePage'>Warehouse Web app</Link>
                     </Menu.Item>
                     <SubMenu className="user"
-                             id="user"
-                             title={<span><UserOutlined
-                                 style={{width: '20px', height: '20px'}}/>{props.username}</span>}
+                        id="user"
+                        title={<span><UserOutlined
+                            style={{ width: '20px', height: '20px' }} />{props.username}</span>}
                     >
                         <MenuItem onClick={onLogout}>Log out</MenuItem>
                     </SubMenu>
