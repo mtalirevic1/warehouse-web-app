@@ -11,6 +11,14 @@ const Login = props => {
         values.role = "ROLE_WAREMAN";
         axios.post('https://main-server-si.herokuapp.com/api/auth/login', values).then(response => {
             props.handleLogin({ username: values.username, token: response.data.token });
+            props.handleAddNotification(
+                {
+                    title: "You have successfully logged in as " + values.username,
+                    description: new Date().toLocaleString(),
+                    href: "/homepage",
+                    type: "success"
+                }
+            )
             props.history.push('/homepage');
         }).catch(er => {
             console.log(er);
@@ -39,7 +47,7 @@ const Login = props => {
                         }
                     ]}
                 >
-                    <Input className="login-form-input" prefix={<UserOutlined className="site-form-item-icon" style={{width: '20px', height: '20px'}}/>} placeholder="Username" />
+                    <Input className="login-form-input" prefix={<UserOutlined className="site-form-item-icon" style={{ width: '20px', height: '20px' }} />} placeholder="Username" />
                 </Form.Item>
                 <Form.Item
                     name="password"
@@ -53,7 +61,7 @@ const Login = props => {
                 >
                     <Input
                         className="login-form-input"
-                        prefix={<LockOutlined className="site-form-item-icon" style={{width: '20px', height: '20px'}}/>}
+                        prefix={<LockOutlined className="site-form-item-icon" style={{ width: '20px', height: '20px' }} />}
                         type="password"
                         placeholder="Password"
                     />

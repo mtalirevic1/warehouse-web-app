@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {Table, Layout, Popconfirm, message, Modal, Form, Input, InputNumber, Button, Upload, Select} from 'antd';
+import React, { Component } from 'react'
+import { Table, Layout, Popconfirm, message, Modal, Form, Input, Button, Select } from 'antd';
 import axios from 'axios';
 import MyHeader from "../header/MyHeader";
 import Footer from "../footer/Footer";
@@ -47,7 +47,7 @@ export default class ProductsTable extends Component {
                     title: 'Picture',
                     dataIndex: 'image',
                     render: theImageURL => <img className="productPicture" alt={theImageURL} src={theImageURL}
-                                                width="40" height="40"/>
+                        width="40" height="40" />
                 },
                 {
                     title: 'Change quantity',
@@ -80,7 +80,7 @@ export default class ProductsTable extends Component {
                     dataIndex: 'deleteButton',
                     render: (text, record) =>
                         this.state.products.length >= 1 ? (
-                            <Popconfirm title={confirmationText} onConfirm={() => this.handleDelete(record)}>
+                            <Popconfirm title={confirmationText} onCancel={() => this.onCloseDelete(record.name)} onConfirm={() => this.handleDelete(record)}>
                                 <a>Delete</a>
                             </Popconfirm>
                         ) : null
@@ -138,6 +138,17 @@ export default class ProductsTable extends Component {
         this.handleAddPdv = this.handleAddPdv.bind(this);
     }
 
+    onCloseDelete = name => {
+        this.props.handleAddNotification(
+            {
+                title: "You have cancelled deleting product " + name,
+                description: new Date().toLocaleString(),
+                href: "/productsTable",
+                type: "info"
+            }
+        );
+    }
+
     updateImg(data) {
         this.setState({
             img: data
@@ -145,31 +156,31 @@ export default class ProductsTable extends Component {
     }
 
     handleQuantityChange(event) {
-        this.setState({addQuantity: event.target.value});
+        this.setState({ addQuantity: event.target.value });
     }
 
     handleNameChange(event) {
-        this.setState({name: event.target.value});
+        this.setState({ name: event.target.value });
     }
 
     handlePriceChange(event) {
-        this.setState({price: event.target.value});
+        this.setState({ price: event.target.value });
     }
 
     handleUnitChange(event) {
-        this.setState({unit: event.target.value});
+        this.setState({ unit: event.target.value });
     }
 
     handleBarcodeChange(event) {
-        this.setState({barcode: event.target.value});
+        this.setState({ barcode: event.target.value });
     }
 
     handleDescriptionChange(event) {
-        this.setState({description: event.target.value});
+        this.setState({ description: event.target.value });
     }
 
-    handlePdvChange= (value,event) => {
-        this.setState({pdv: value});
+    handlePdvChange = (value, event) => {
+        this.setState({ pdv: value });
     }
 
     updateAddImg(data) {
@@ -179,32 +190,31 @@ export default class ProductsTable extends Component {
     }
 
     handleAddQuantity(event) {
-        this.setState({addNumber: event.target.value});
+        this.setState({ addNumber: event.target.value });
     }
 
     handleAddName(event) {
-        this.setState({addName: event.target.value});
+        this.setState({ addName: event.target.value });
     }
 
     handleAddPrice(event) {
-        this.setState({addPrice: event.target.value});
+        this.setState({ addPrice: event.target.value });
     }
 
     handleAddUnit(event) {
-        this.setState({addUnit: event.target.value});
+        this.setState({ addUnit: event.target.value });
     }
 
     handleAddBarcode(event) {
-        this.setState({addBarcode: event.target.value});
+        this.setState({ addBarcode: event.target.value });
     }
 
     handleAddDescription(event) {
-        this.setState({addDescription: event.target.value});
+        this.setState({ addDescription: event.target.value });
     }
 
-    handleAddPdv = (value,event) => {
-        console.log("VALUE: "+value);
-        this.setState({addPdv: value});
+    handleAddPdv = (value, event) => {
+        this.setState({ addPdv: value });
     }
 
     getPdvList = () => {
@@ -213,14 +223,11 @@ export default class ProductsTable extends Component {
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.get('https://main-server-si.herokuapp.com/api/pdv')
             .then(d => {
-                //this.setState({pdvList: data});
-                console.log("TOKEN: "+token);
-                let pdvs=[];
-                for(let i=0; i<d.data.length; i++){
+                let pdvs = [];
+                for (let i = 0; i < d.data.length; i++) {
                     pdvs.push(<Option value={d.data[i].pdv} key={i.toString(36) + i}>{d.data[i].pdv}</Option>);
-                    console.log("PDVS: "+d.data[i].pdv);
                 }
-                this.setState({pdvList: pdvs});
+                this.setState({ pdvList: pdvs });
             })
             .catch(er => {
                 console.log("ERROR 1: " + er);
@@ -228,12 +235,20 @@ export default class ProductsTable extends Component {
             })
     };
 
-    onCloseModal = () => {
-        this.setState({modalVisible: false, activeItemId: null, currentQuantity: null, addQuantity: null});
+    onCloseModal = name => {
+        this.setState({ modalVisible: false, activeItemId: null, currentQuantity: null, addQuantity: null });
+        this.props.handleAddNotification(
+            {
+                title: "You have cancelled changing quantity of product " + name,
+                description: new Date().toLocaleString(),
+                href: "/productsTable",
+                type: "info"
+            }
+        );
     };
 
     onOpenModal = id => {
-        this.setState({modalVisible: true, activeItemId: id})
+        this.setState({ modalVisible: true, activeItemId: id })
         this.getCurrentQuantity(id);
     };
 
@@ -251,11 +266,21 @@ export default class ProductsTable extends Component {
         });
     };
 
-    onCloseUpdate = () => {
+    onCloseUpdate = name => {
         this.setState({
             updateVisible: false, name: null, img: null,
             id: null, price: null, unit: null, barcode: null, description: null, pdv: null
         });
+        if (name !== null) {
+            this.props.handleAddNotification(
+                {
+                    title: "You have cancelled updating product " + name,
+                    description: new Date().toLocaleString(),
+                    href: "/productsTable",
+                    type: "info"
+                }
+            );
+        }
     };
 
     onOpenAdd = () => {
@@ -270,6 +295,14 @@ export default class ProductsTable extends Component {
             addVisible: false, addName: null, addImg: null, addPrice: null,
             addUnit: null, addBarcode: null, addDescription: null, addPdv: null
         });
+        this.props.handleAddNotification(
+            {
+                title: "You have cancelled adding new product",
+                description: new Date().toLocaleString(),
+                href: "/productsTable",
+                type: "info"
+            }
+        );
     };
 
     add = () => {
@@ -283,9 +316,6 @@ export default class ProductsTable extends Component {
             description: this.state.addDescription,
             quantity: this.state.addNumber
         };
-        console.log(this.state);
-        console.log(data1);
-        console.log(this.state.addImg)
 
         if (this.state.addName === null || this.state.addPrice === null || this.state.addUnit === null ||
             this.state.addBarcode === null || this.state.addNumber === null || this.state.addImg === null) {
@@ -299,7 +329,7 @@ export default class ProductsTable extends Component {
         fd.append('image', this.state.addImg, this.state.addImg.name);
         axios.defaults.headers.common['Content-Type'] = "multipart/form-data";
         axios.post('https://main-server-si.herokuapp.com/api/products', data1).then(p1 => {
-            let data2 = {productId: p1.data.id, quantity: this.state.addNumber};
+            let data2 = { productId: p1.data.id, quantity: this.state.addNumber };
             axios.post('https://main-server-si.herokuapp.com/api/warehouse', data2).then(p2 => {
                 const fd = new FormData();
                 fd.append('image', this.state.addImg, this.state.addImg.name);
@@ -308,21 +338,53 @@ export default class ProductsTable extends Component {
                     p2.data.productId.toString() + '/image', fd
                 ).then(pic => {
                     message.success("You successfully added new product!");
+                    this.props.handleAddNotification(
+                        {
+                            title: "You have successfully added new product " + this.state.addName,
+                            description: new Date().toLocaleString(),
+                            href: "/productsTable",
+                            type: "success",
+                        }
+                    );
                 }).catch(er3 => {
                     console.log("ERROR 3: " + er3);
                     message.error("Unable to add product picture!", [0.7]);
+                    this.props.handleAddNotification(
+                        {
+                            title: "Error while adding new product " + this.state.addName,
+                            description: new Date().toLocaleString(),
+                            href: "/productsTable",
+                            type: "error",
+                        }
+                    );
                 })
             }).catch(er2 => {
                 console.log("ERROR 2: " + er2);
                 message.error("Unable to add product quantity!", [0.7]);
+                this.props.handleAddNotification(
+                    {
+                        title: "Error while adding new product " + this.state.addName,
+                        description: new Date().toLocaleString(),
+                        href: "/productsTable",
+                        type: "error",
+                    }
+                );
             })
         }).catch(er1 => {
             console.log("ERROR 1: " + er1);
             message.error("Unable to add product!", [0.7]);
+            this.props.handleAddNotification(
+                {
+                    title: "Error while adding new product " + this.state.addName,
+                    description: new Date().toLocaleString(),
+                    href: "/productsTable",
+                    type: "error",
+                }
+            );
         }).then(() => {
             fetch(API)
                 .then(response => response.json())
-                .then(data => this.setState({products: data, isLoading: false}));
+                .then(data => this.setState({ products: data, isLoading: false }));
         });
 
     }
@@ -364,22 +426,55 @@ export default class ProductsTable extends Component {
                     data2.productId.toString() + '/image', fd
                 ).then(pic => {
                     message.success("You successfully changed product!");
-                    this.onCloseUpdate();
+                    this.props.handleAddNotification(
+                        {
+                            title: "You have successfully updated product " + this.state.name,
+                            description: new Date().toLocaleString(),
+                            href: "/productsTable",
+                            type: "success",
+                        }
+                    );
+                    this.onCloseUpdate(null);
                 }).catch(er3 => {
                     console.log("ERROR 3: " + er3);
                     message.error("Unable to add product picture!", [0.7]);
+                    this.props.handleAddNotification(
+                        {
+                            title: "Error while updating product " + this.state.name,
+                            description: new Date().toLocaleString(),
+                            href: "/productsTable",
+                            type: "error",
+                        }
+                    );
                 })
             } else {
                 message.success("You successfully changed product!");
-                this.onCloseUpdate();
+                this.props.handleAddNotification(
+                    {
+                        title: "You have successfully updated product " + this.state.name,
+                        description: new Date().toLocaleString(),
+                        href: "/productsTable",
+                        type: "success",
+                    }
+                );
+                this.onCloseUpdate(null);
             }
         }).catch(er1 => {
             console.log("ERROR 1: " + er1);
             message.error("Unable to add product!", [0.7]);
+            this.props.handleAddNotification(
+                {
+                    title: "Error while updating product " + this.state.name,
+                    description: new Date().toLocaleString(),
+                    href: "/productsTable",
+                    type: "error",
+                }
+            );
+
         }).then(() => {
             fetch(API)
                 .then(response => response.json())
-                .then(data => this.setState({products: data, isLoading: false}));
+                .then(data => this.setState({ products: data, isLoading: false }));
         });
     }
 
@@ -387,8 +482,8 @@ export default class ProductsTable extends Component {
         let token = 'Bearer ' + this.props.token;
         axios.defaults.headers.common["Authorization"] = token;
         axios.defaults.headers.common["Content-Type"] = "application/json";
-        axios.post('https://main-server-si.herokuapp.com/api/warehouse', {productId: id, quantity: 0}).then(p => {
-            this.setState({currentQuantity: p.data.quantity});
+        axios.post('https://main-server-si.herokuapp.com/api/warehouse', { productId: id, quantity: 0 }).then(p => {
+            this.setState({ currentQuantity: p.data.quantity });
         }).catch(err => {
             console.log("ERROR: " + err);
             message.error("Unable to get product quantity!", [0.7]);
@@ -396,7 +491,7 @@ export default class ProductsTable extends Component {
         return this.state.currentQuantity;
     }
 
-    changeQuantity = id => {
+    changeQuantity = (id, name, currentQuantity, addQuantity) => {
         let token = 'Bearer ' + this.props.token;
         axios.defaults.headers.common["Authorization"] = token;
         axios.defaults.headers.common["Content-Type"] = "application/json";
@@ -404,12 +499,29 @@ export default class ProductsTable extends Component {
             productId: id,
             quantity: this.state.addQuantity
         }).then(p => {
-            this.setState({currentQuantity: p.data.quantity});
-            this.onCloseModal();
+            this.setState({ currentQuantity: p.data.quantity });
+            this.onCloseModal(null);
             message.success("You successfully changed quantity!", [0.7]);
+            let newQuantity = parseInt(currentQuantity) + parseInt(addQuantity);
+            this.props.handleAddNotification(
+                {
+                    title: "You have successfully changed quantity of product " + name + " from " + currentQuantity + " to " + newQuantity,
+                    description: new Date().toLocaleString(),
+                    href: "/productsTable",
+                    type: "success",
+                }
+            );
         }).catch(err => {
             console.log("ERROR: " + err);
             message.error("Unable to change product quantity!", [0.7]);
+            this.props.handleAddNotification(
+                {
+                    title: "Error while changing quantity of product " + name,
+                    description: new Date().toLocaleString(),
+                    href: "/productsTable",
+                    type: "error",
+                }
+            );
         })
     }
 
@@ -423,7 +535,7 @@ export default class ProductsTable extends Component {
                     centered
                     visible={this.state.updateVisible}
                     onOk={() => this.update(record)}
-                    onCancel={() => this.onCloseUpdate()}
+                    onCancel={() => this.onCloseUpdate(record.name)}
                 >
                     <Form
                         initialValues={{
@@ -436,7 +548,7 @@ export default class ProductsTable extends Component {
                         >
                             <FileUploader
                                 updateImg={this.updateImg}
-                                className="add-form-input"/>
+                                className="add-form-input" />
                         </Form.Item>
                         <Form.Item
                             name="productName"
@@ -454,7 +566,7 @@ export default class ProductsTable extends Component {
                                 id="name"
                                 value={this.state.name} onChange={this.handleNameChange}
                                 defaultValue={record.name}
-                                placeholder="Product name"/>
+                                placeholder="Product name" />
                         </Form.Item>
                         <Form.Item
                             name="productPrice"
@@ -489,9 +601,9 @@ export default class ProductsTable extends Component {
                             ]}
                         >
                             <Input id="unit" name="unit" placeholder="Unit"
-                                   value={this.state.unit}
-                                   onChange={this.handleUnitChange}
-                                   defaultValue={record.unit}
+                                value={this.state.unit}
+                                onChange={this.handleUnitChange}
+                                defaultValue={record.unit}
                             />
                         </Form.Item>
                         <Form.Item
@@ -534,9 +646,9 @@ export default class ProductsTable extends Component {
                             name="productDescription"
                         >
                             <Input id="description" name="description" placeholder="Description"
-                                   value={this.state.description}
-                                   defaultValue={this.state.description}
-                                   onChange={this.handleDescriptionChange}
+                                value={this.state.description}
+                                defaultValue={this.state.description}
+                                onChange={this.handleDescriptionChange}
                             />
                         </Form.Item>
                     </Form>
@@ -554,8 +666,8 @@ export default class ProductsTable extends Component {
                     title="Change product quantity"
                     centered
                     visible={this.state.modalVisible}
-                    onOk={() => this.changeQuantity(record.id)}
-                    onCancel={() => this.onCloseModal()}
+                    onOk={() => this.changeQuantity(record.id, record.name, this.state.currentQuantity, this.state.addQuantity)}
+                    onCancel={() => this.onCloseModal(record.name)}
                 >
                     <div className="modalPinfo">
                         <h1>Product details</h1>
@@ -567,7 +679,7 @@ export default class ProductsTable extends Component {
                         <p>Product description:</p>
                         <p>{record.description}</p>
                     </div>
-                    <img className="modalPicture" alt={record.image} src={record.image}/>
+                    <img className="modalPicture" alt={record.image} src={record.image} />
                     <p className="currentQuantity">Current product quantity: {this.state.currentQuantity}</p>
                     <Form>
                         <Form.Item
@@ -598,11 +710,11 @@ export default class ProductsTable extends Component {
 
 
     componentDidMount() {
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
         this.getPdvList();
         fetch(API)
             .then(response => response.json())
-            .then(data => this.setState({products: data, isLoading: false}));
+            .then(data => this.setState({ products: data, isLoading: false }));
     }
 
     handleDelete = record => {
@@ -611,14 +723,30 @@ export default class ProductsTable extends Component {
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.delete('https://main-server-si.herokuapp.com/api/products/' + record.id)
             .then(response => {
-                message.success("You successfully deleted a product!")
+                message.success("You successfully deleted a product!");
+                this.props.handleAddNotification(
+                    {
+                        title: "You have successfully deleted product " + record.name,
+                        description: new Date().toLocaleString(),
+                        href: "/productsTable",
+                        type: "success",
+                    }
+                );
             }).catch(er => {
-            message.error("Unable to remove product!");
-        }).then(() => {
-            fetch(API)
-                .then(response => response.json())
-                .then(data => this.setState({products: data, isLoading: false}));
-        });
+                message.error("Unable to remove product!");
+                this.props.handleAddNotification(
+                    {
+                        title: "Error while deleting product " + record.name,
+                        description: new Date().toLocaleString(),
+                        href: "/productsTable",
+                        type: "error",
+                    }
+                );
+            }).then(() => {
+                fetch(API)
+                    .then(response => response.json())
+                    .then(data => this.setState({ products: data, isLoading: false }));
+            });
     };
 
     render() {
@@ -627,9 +755,9 @@ export default class ProductsTable extends Component {
         return (
             <Layout>
                 <MyHeader loggedInStatus={this.props.loggedInStatus}
-                          token={this.props.token}
-                          username={this.props.username}
-                          handleLogout={this.props.handleLogout}/>
+                    token={this.props.token}
+                    username={this.props.username}
+                    handleLogout={this.props.handleLogout} />
                 <div className="ant-table">
                     <div className="add">
                         <Button type="primary" onClick={this.onOpenAdd}>
@@ -654,7 +782,7 @@ export default class ProductsTable extends Component {
                                 >
                                     <FileUploader
                                         updateImg={this.updateAddImg}
-                                        className="add-form-input"/>
+                                        className="add-form-input" />
                                 </Form.Item>
                                 <Form.Item
                                     name="productName"
@@ -673,7 +801,7 @@ export default class ProductsTable extends Component {
                                         value={this.state.addName}
                                         defaultValue={this.state.addName}
                                         onChange={this.handleAddName}
-                                        placeholder="Product name"/>
+                                        placeholder="Product name" />
                                 </Form.Item>
                                 <Form.Item
                                     name="productPrice"
@@ -708,9 +836,9 @@ export default class ProductsTable extends Component {
                                     ]}
                                 >
                                     <Input id="unit" name="unit" placeholder="Unit"
-                                           value={this.state.addUnit}
-                                           defaultValue={this.state.addUnit}
-                                           onChange={this.handleAddUnit}
+                                        value={this.state.addUnit}
+                                        defaultValue={this.state.addUnit}
+                                        onChange={this.handleAddUnit}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -723,10 +851,10 @@ export default class ProductsTable extends Component {
                                     ]}
                                 >
                                     <Input type="number" min={0} step={1} id="quantity" name="quantity"
-                                           placeholder="Quantity"
-                                           value={this.state.addNumber}
-                                           defaultValue={this.state.addNumber}
-                                           onChange={this.handleAddQuantity}
+                                        placeholder="Quantity"
+                                        value={this.state.addNumber}
+                                        defaultValue={this.state.addNumber}
+                                        onChange={this.handleAddQuantity}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -769,9 +897,9 @@ export default class ProductsTable extends Component {
                                     name="productDecsription"
                                 >
                                     <Input id="description" name="description" placeholder="Description"
-                                           value={this.state.addDescription}
-                                           defaultValue={this.state.addDescription}
-                                           onChange={this.handleAddDescription}
+                                        value={this.state.addDescription}
+                                        defaultValue={this.state.addDescription}
+                                        onChange={this.handleAddDescription}
                                     />
                                 </Form.Item>
                             </Form>
@@ -785,7 +913,7 @@ export default class ProductsTable extends Component {
                         rowKey="id"
                     />
                 </div>
-                <Footer/>
+                <Footer />
             </Layout>
         );
     }
