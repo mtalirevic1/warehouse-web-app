@@ -6,7 +6,8 @@ import {
     ShopOutlined,
     UserOutlined,
     UnorderedListOutlined,
-    NotificationOutlined
+    NotificationOutlined,
+    InboxOutlined
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import MenuItem from "antd/es/menu/MenuItem";
@@ -58,9 +59,17 @@ const MyHeader = props => {
                     </SubMenu>
                     <SubMenu
                         key="sub4"
-                        title={<span><NotificationOutlined style={{ width: '20px', height: '20px' }} />Notifications</span>}
+                        title={<span><InboxOutlined style={{ width: '20px', height: '20px' }} />Requests</span>}
                     >
                         <Menu.Item key="6">
+                            <Link to='/requests'>Display requests</Link>
+                        </Menu.Item>
+                    </SubMenu>
+                    <SubMenu
+                        key="sub5"
+                        title={<span><NotificationOutlined style={{ width: '20px', height: '20px' }} />Notifications</span>}
+                    >
+                        <Menu.Item key="7">
                             <Link to='/notifications'>Display notifications</Link>
                         </Menu.Item>
                     </SubMenu>
