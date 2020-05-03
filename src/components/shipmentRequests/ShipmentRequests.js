@@ -19,7 +19,7 @@ export default class ProductsTable extends Component {
             columns: [
                 {
                     title: "ID",
-                    dataIndex: "requestsId",
+                    dataIndex: "requestId",
                     width: '10%'
                 },
                 {
@@ -40,7 +40,7 @@ export default class ProductsTable extends Component {
                             <div>
                                 <a
                                     key={record.requestdId}
-                                    onClick={() => this.onOpenDetails(record.requestdId)}>Details</a>
+                                    onClick={() => this.onOpenDetails(record)}>Details</a>
                                 <div>{this.renderDetails(record)}</div>
                             </div>
                         ) : null
@@ -122,13 +122,13 @@ export default class ProductsTable extends Component {
         this.setState({ detailsVisible: false, activeItemId: null });
     };
 
-    onOpenDetails = requestId => {
-        this.setState({ detailsVisible: true, activeItemId: requestId })
+    onOpenDetails = record => {
+        this.setState({ detailsVisible: true, activeItemId: record.requestId })
     };
 
     handleAccept = record => {
         let data = {
-            requestsId: record.requestsId,
+            requestId: record.requestId,
             message:'you accepted the request'
         }
         axios.defaults.headers.common["Authorization"] = 'Bearer ' + this.props.token;
@@ -148,7 +148,7 @@ export default class ProductsTable extends Component {
 
     handleDeny = record => {
         let data = {
-            requestId: record.requestsId,
+            requestId: record.requestId,
             message:'you denied the request'
         }
         axios.defaults.headers.common["Authorization"] = 'Bearer ' + this.props.token;
@@ -171,7 +171,7 @@ export default class ProductsTable extends Component {
         const dataSource2 = record.requests;
         const columns2 = this.state.columnsProducts;
 
-        if (this.state.activeItemId === record.id) {
+        if (this.state.activeItemId === record.requestId) {
             return (
                 <Modal
                     mask={false}
@@ -215,62 +215,6 @@ export default class ProductsTable extends Component {
             });
     }
 
-    componentDidMount2() {
-                let podaci = [
-                    {
-                        requestsId: 3,
-                        office: {
-                            id:'',
-                            address:'Titova ulica bb',
-                            city:'Sarajevo',
-                            country:'Bosnia and Herzegovina',
-                            email:'aha@etf.unsa.ba',
-                            phoneNumber:'+38733567865',
-                            workDayStart:'',
-                            workDayEnd:'',
-                            language:'',
-                            maxNumberCashRegisters:''
-                        },
-                        requests: [
-                            {
-                                product: {
-                                    id:'1',
-                                    name:'Kola',
-                                    price:'2.5',
-                                    pdv:'17',
-                                    unit:'l',
-                                    barcode:'1234567890123',
-                                    description:'',
-                                    discount: {
-                                        percentage: 10
-                                    }
-                                },
-                                quantity: 300,
-                                availableQuantity: 200
-                            },
-                            {
-                                product: {
-                                    id:'2',
-                                    name:'Keks',
-                                    price:'2',
-                                    pdv:'17',
-                                    unit:'l',
-                                    barcode:'1234567890122',
-                                    description:'',
-                                    discount: {
-                                        percentage: 10
-                                    }
-                                },
-                                quantity: 30,
-                                availableQuantity: 200
-                            }
-                        ]
-                    },
-                ];
-                this.setState({ requests: podaci, isLoading: false });
-    }
-
-    
 
     render() {
         const dataSource = this.state.requests;
