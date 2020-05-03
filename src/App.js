@@ -9,7 +9,7 @@ import ReceivedLogs from "./components/logs/ReceivedLogs";
 import SentLogs from "./components/logs/SentLogs";
 import StoresTable from "./components/storesTable/StoresTable";
 import Notifications from "./components/notifications/Notifications";
-
+import ShipmentRequests from "./components/shipmentRequests/ShipmentRequests";
 
 const ProtectedRoute = ({ component: Comp, loggedInStatus, username, token, notifications, path, handleLogout, handleAddNotification, handleDeleteNotification, ...rest }) => {
     return (
@@ -121,6 +121,19 @@ class App extends Component {
                         username={this.state.username}
                         notifications={this.state.notifications}
                         component={ProductsTable}
+                        handleLogout={this.handleLogout}
+                        handleAddNotification={this.handleAddNotification}
+                        handleDeleteNotification={this.handleDeleteNotification}
+                    />
+
+                    <ProtectedRoute
+                        path="/requests"
+                        exact
+                        loggedInStatus={this.state.loggedInStatus}
+                        token={this.state.token}
+                        username={this.state.username}
+                        notifications={this.state.notifications}
+                        component={ShipmentRequests}
                         handleLogout={this.handleLogout}
                         handleAddNotification={this.handleAddNotification}
                         handleDeleteNotification={this.handleDeleteNotification}

@@ -1,0 +1,61 @@
+.ant-table {
+    margin-bottom: 30px;
+    background-color: whitesmoke;
+  }
+  
+  .productPicture {
+    object-fit: contain;
+  }
+  
+  .ant-modal-title {
+    text-align: center;
+    color: #0150ac;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  
+  .ant-modal-body {
+    height: auto;
+  }
+  
+  .modalPinfo {
+    width: 90%;
+    height: 300px;
+    float: left;
+  }
+  
+  .modalPicture {
+    margin-top: 20px;
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+  }
+  
+  h1 {
+    height: 40px;
+  }
+  
+  p {
+    font-size: 15px;
+    width: 100%;
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+  
+  .currentQuantity {
+    margin-top: 30px;
+    color: #0150ac;
+    font-weight: bold;
+  }
+  
+  
+  .add {
+    margin-top: 40px;
+    margin-left: 20px;
+    width: 100%;
+    background-color: whitesmoke;
+  }
+
+  .notAvailable {
+    color: lightcoral;
+  }
