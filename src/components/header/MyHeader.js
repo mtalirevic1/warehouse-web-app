@@ -12,6 +12,8 @@ import {
 import SubMenu from 'antd/lib/menu/SubMenu';
 import MenuItem from "antd/es/menu/MenuItem";
 import { Link } from 'react-router-dom';
+import BarChartOutlined from "@ant-design/icons/lib/icons/BarChartOutlined";
+import BellOutlined from "@ant-design/icons/lib/icons/BellOutlined";
 
 const { Header } = Layout;
 
@@ -67,9 +69,17 @@ const MyHeader = props => {
                     </SubMenu>
                     <SubMenu
                         key="sub5"
-                        title={<span><NotificationOutlined style={{ width: '20px', height: '20px' }} />Notifications</span>}
+                        title={<span><BarChartOutlined style={{ width: '20px', height: '20px' }} />Statistics</span>}
                     >
                         <Menu.Item key="7">
+                            <Link to='/graphicStatistics'>Display statistic graphics</Link>
+                        </Menu.Item>
+                    </SubMenu>
+                    <SubMenu
+                        key="sub6"
+                        title={<span><BellOutlined style={{ width: '20px', height: '20px' }} />Notifications</span>}
+                    >
+                        <Menu.Item key="8">
                             <Link to='/notifications'>Display notifications</Link>
                         </Menu.Item>
                     </SubMenu>

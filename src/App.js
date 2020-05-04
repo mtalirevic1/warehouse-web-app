@@ -13,6 +13,7 @@ import SentLogs from "./components/logs/SentLogs";
 import StoresTable from "./components/storesTable/StoresTable";
 import Notifications from "./components/notifications/Notifications";
 import ShipmentRequests from "./components/shipmentRequests/ShipmentRequests";
+import Graphs from "./components/graphs/Graphs";
 
 let socket, stompClient;
 const SERVER_URL = 'https://log-server-si.herokuapp.com/ws';
@@ -43,8 +44,8 @@ const ProtectedRoute = ({ component: Comp, loggedInStatus, username, token, noti
 };
 
 class App extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             loggedInStatus: "NOT_LOGGED_IN",
@@ -62,10 +63,10 @@ class App extends Component {
     componentDidMount() {
         socket = new SockJS(SERVER_URL);
         stompClient = Stomp.over(socket);
-        
+
             stompClient.connect({}, () => {
             if (stompClient.connected) {
-                stompClient.subscribe('/topic/warehouse', msg => 
+                stompClient.subscribe('/topic/warehouse', msg =>
                  {
                     let data = JSON.parse(msg.body);
                     const newNotification = data.payload.description;
@@ -226,6 +227,18 @@ class App extends Component {
                         username={this.state.username}
                         notifications={this.state.notifications}
                         component={Notifications}
+                        handleLogout={this.handleLogout}
+                        handleAddNotification={this.handleAddNotification}
+                        handleDeleteNotification={this.handleDeleteNotification}
+                    />
+                    <ProtectedRoute
+                        path="/graphicStatistics"
+                        exact
+                        loggedInStatus={this.state.loggedInStatus}
+                        token={this.state.token}
+                        username={this.state.username}
+                        notifications={this.state.notifications}
+                        component={Graphs}
                         handleLogout={this.handleLogout}
                         handleAddNotification={this.handleAddNotification}
                         handleDeleteNotification={this.handleDeleteNotification}
