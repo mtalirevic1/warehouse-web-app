@@ -19,7 +19,7 @@ export default class ProductsTable extends Component {
             columns: [
                 {
                     title: "ID",
-                    dataIndex: "requestsId",
+                    dataIndex: "requestId",
                     width: '10%'
                 },
                 {
@@ -40,7 +40,7 @@ export default class ProductsTable extends Component {
                             <div>
                                 <a
                                     key={record.requestdId}
-                                    onClick={() => this.onOpenDetails(record.requestdId)}>Details</a>
+                                    onClick={() => this.onOpenDetails(record)}>Details</a>
                                 <div>{this.renderDetails(record)}</div>
                             </div>
                         ) : null
@@ -51,7 +51,8 @@ export default class ProductsTable extends Component {
                     width: '10%',
                     render: (text, record) =>
                         this.state.requests.length >= 1 ? (
-                            <Popconfirm title={"Are you sure you want to accept this request?"} 
+                            <Popconfirm title={"Are you sure you want to accept this request?"}
+                                        key={record.requestdId}
                                         onCancel={() => this.onCloseAccept}
                                         onConfirm={() => this.handleAccept(record)}>
                                 <a>Accept</a>
@@ -65,6 +66,7 @@ export default class ProductsTable extends Component {
                     render: (text, record) =>
                         this.state.requests.length >= 1 ? (
                             <Popconfirm title={"Are you sure you want to deny this request?"} 
+                                        key={record.requestdId}
                                         onCancel={() => this.onCloseDeny}
                                         onConfirm={() => this.handleDeny(record)}>
                                 <a>Deny</a>
@@ -73,6 +75,16 @@ export default class ProductsTable extends Component {
                 },
             ],
             columnsProducts: [
+                {
+                    title: 'id',
+                    dataIndex: 'id',
+                    width: '20%',
+                    render: (text, record) => (
+                        <span>
+                          <a>{record.product.id}</a>
+                        </span>
+                    )
+                },
                 {
                     title: 'Name',
                     dataIndex: 'name',
@@ -122,13 +134,13 @@ export default class ProductsTable extends Component {
         this.setState({ detailsVisible: false, activeItemId: null });
     };
 
-    onOpenDetails = requestId => {
-        this.setState({ detailsVisible: true, activeItemId: requestId })
+    onOpenDetails = record => {
+        this.setState({ detailsVisible: true, activeItemId: record.requestId })
     };
 
     handleAccept = record => {
         let data = {
-            requestsId: record.requestsId,
+            requestId: record.requestId,
             message:'you accepted the request'
         }
         axios.defaults.headers.common["Authorization"] = 'Bearer ' + this.props.token;
@@ -137,9 +149,33 @@ export default class ProductsTable extends Component {
             .then(response => {
                 message.success("You accepted the request!");
             }).catch(er => {
-                console.log("ERROR: " + er);
                 message.error("Unable to accept request!", [0.7]);
             });
+            let size = record.requests.length;
+            console.log(size);
+            for(let i =  0; i < size; i++){
+                    let request = record.requests[i];
+                    let office = record.office;
+                    console.log(request);
+                    console.log(office);
+                    let data1 = { officeId: office.id, productId: request.product.id, quantity: request.availableQuantity - request.quantity};
+                    console.log(data1);
+                    axios.post('https://main-server-si.herokuapp.com/api/inventory', data1)
+                    .then(response => {
+                        message.success("Quantity changed!");
+                    }).catch(er => {
+                        message.error("Unable to change quantity!", [0.7]);
+                    });
+                }
+       /* for(let i =  0; i < record.requests.length; i++){
+            axios.post('https://main-server-si.herokuapp.com/api/inventory', 
+            { officeId: record.office.officeId, productId: record.requests[i].product.id, quantity: record.requests[i].quantity})
+            .then(response => {
+                message.success("Quantity changed!");
+            }).catch(er => {
+                message.error("Unable to change quantity!", [0.7]);
+            });
+        }*/
     }
 
     onCloseAccept = () => {
@@ -148,7 +184,7 @@ export default class ProductsTable extends Component {
 
     handleDeny = record => {
         let data = {
-            requestId: record.requestsId,
+            requestId: record.requestId,
             message:'you denied the request'
         }
         axios.defaults.headers.common["Authorization"] = 'Bearer ' + this.props.token;
@@ -158,7 +194,7 @@ export default class ProductsTable extends Component {
                 message.success("You denied the request!");
             }).catch(er => {
                 console.log("ERROR: " + er);
-                message.error("Unable to accept request!", [0.7]);
+                message.error("Unable to deny request!", [0.7]);
             });
     }
 
@@ -168,10 +204,14 @@ export default class ProductsTable extends Component {
 
     renderDetails = record => {
 
+        console.log(record);
+
         const dataSource2 = record.requests;
         const columns2 = this.state.columnsProducts;
 
-        if (this.state.activeItemId === record.id) {
+        console.log(record.requests.length);
+        console.log(record.requests[0].product.id);
+        if (this.state.activeItemId === record.requestId) {
             return (
                 <Modal
                     mask={false}
@@ -193,7 +233,8 @@ export default class ProductsTable extends Component {
                     <div >
                         <Table
                             dataSource={dataSource2}
-                            columns={columns2}
+                            columns={columns2} 
+                            key="id"
                         />
                     </div>
                 </Modal>
@@ -208,69 +249,15 @@ export default class ProductsTable extends Component {
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.get('https://main-server-si.herokuapp.com/api/warehouse/requests')
             .then(response => {
-                 this.setState({ requests: response.data, isLoading: false }) })
+                 this.setState({ requests: response.data, isLoading: false }) 
+                 console.log(response.data);
+                })
             .catch(er => {
                 console.log("ERROR: " + er);
                 message.error("Unable to show requests!", [0.7]);
             });
     }
 
-    componentDidMount2() {
-                let podaci = [
-                    {
-                        requestsId: 3,
-                        office: {
-                            id:'',
-                            address:'Titova ulica bb',
-                            city:'Sarajevo',
-                            country:'Bosnia and Herzegovina',
-                            email:'aha@etf.unsa.ba',
-                            phoneNumber:'+38733567865',
-                            workDayStart:'',
-                            workDayEnd:'',
-                            language:'',
-                            maxNumberCashRegisters:''
-                        },
-                        requests: [
-                            {
-                                product: {
-                                    id:'1',
-                                    name:'Kola',
-                                    price:'2.5',
-                                    pdv:'17',
-                                    unit:'l',
-                                    barcode:'1234567890123',
-                                    description:'',
-                                    discount: {
-                                        percentage: 10
-                                    }
-                                },
-                                quantity: 300,
-                                availableQuantity: 200
-                            },
-                            {
-                                product: {
-                                    id:'2',
-                                    name:'Keks',
-                                    price:'2',
-                                    pdv:'17',
-                                    unit:'l',
-                                    barcode:'1234567890122',
-                                    description:'',
-                                    discount: {
-                                        percentage: 10
-                                    }
-                                },
-                                quantity: 30,
-                                availableQuantity: 200
-                            }
-                        ]
-                    },
-                ];
-                this.setState({ requests: podaci, isLoading: false });
-    }
-
-    
 
     render() {
         const dataSource = this.state.requests;
@@ -285,7 +272,7 @@ export default class ProductsTable extends Component {
                     <Table
                         dataSource={dataSource}
                         columns={columns}
-                        rowKey="address"
+                        rowKey="requestId"
                     />
                 </div>
                 <Footer />
