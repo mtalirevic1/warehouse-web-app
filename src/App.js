@@ -3,6 +3,9 @@ import './App.css';
 import Login from './components/login/Login';
 import HomePage from './components/homePage/HomePage';
 
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
+
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import ProductsTable from "./components/productsTable/ProductsTable";
 import ReceivedLogs from "./components/logs/ReceivedLogs";
@@ -10,6 +13,9 @@ import SentLogs from "./components/logs/SentLogs";
 import StoresTable from "./components/storesTable/StoresTable";
 import Notifications from "./components/notifications/Notifications";
 import ShipmentRequests from "./components/shipmentRequests/ShipmentRequests";
+
+let socket, stompClient;
+const SERVER_URL = 'https://log-server-si.herokuapp.com/ws';
 
 const ProtectedRoute = ({ component: Comp, loggedInStatus, username, token, notifications, path, handleLogout, handleAddNotification, handleDeleteNotification, ...rest }) => {
     return (
@@ -44,7 +50,7 @@ class App extends Component {
             loggedInStatus: "NOT_LOGGED_IN",
             username: "",
             token: "",
-            notifications: []
+            notifications: [],
         };
 
         this.handleLogin = this.handleLogin.bind(this);
@@ -52,6 +58,41 @@ class App extends Component {
         this.handleAddNotification = this.handleAddNotification.bind(this);
         this.handleDeleteNotification = this.handleDeleteNotification.bind(this);
     }
+
+    componentDidMount() {
+        socket = new SockJS(SERVER_URL);
+        stompClient = Stomp.over(socket);
+        
+            stompClient.connect({}, () => {
+            if (stompClient.connected) {
+                stompClient.subscribe('/topic/warehouse', msg => 
+                 {
+                    let data = JSON.parse(msg.body);
+                    const newNotification = data.payload.description;
+                    const action = data.payload.action;
+                    if(action == "open_office" || action == "close_office"){
+                        this.handleAddNotification({
+                            title: "New notification: " + newNotification,
+                            description: new Date().toLocaleString(),
+                            href: "/homepage",
+                            type: "success"
+                        });
+                    }
+                    else if(action == "request_products_to_office"){
+                    this.handleAddNotification({
+                        title: "New notification: " + newNotification,
+                        description: new Date().toLocaleString(),
+                        href: "/requests",
+                        type: "success"
+                    });
+                    }
+                });
+
+            }
+            }, (err) => {
+            console.log('Connection error!');
+            });
+        }
 
     handleLogin(data) {
         this.setState({
