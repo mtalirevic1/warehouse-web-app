@@ -29,8 +29,8 @@ export default class BarGraph extends Component {
                     {
                         label: title,
                         data: data,
-                        fill: false,
-                        borderColor: "#6610f2"
+                        fill: true,
+                        backgroundColor: "#0150ac"
                     }
                 ]
             },
