@@ -30,7 +30,7 @@ export default class LineGraph2 extends Component {
                         label: title,
                         data: data,
                         fill: false,
-                        borderColor: "#6610f2"
+                        borderColor: "#0150ac"
                     }
                 ]
             },
