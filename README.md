@@ -86,7 +86,5 @@ Team Golf<br><br>
 <a href="https://github.com/somerhaldera" target="_blank"><img width="100px" height="100px" src="https://github.com/somerhaldera.png"></a>
 <a href="https://github.com/nimamovic" target="_blank"><img width="100px" height="100px" src="https://github.com/nimamovic.png"></a>
 <a href="https://github.com/zlxxo" target="_blank"><img width="100px" height="100px" src="https://github.com/zlxxo.png"></a>
-<a href="https://github.com/emirx" target="_blank"><img width="100px" 
-height="100px" src="https://github.com/emirx.png"></a>
 <a href="https://github.com/bhrustemov1" target="_blank"><img width="100px" height="100px" src="https://github.com/bhrustemov1.png"></a>
 <a href="https://github.com/harisajdinovic" target="_blank"><img width="100px" height="100px" src="https://github.com/harisajdinovic.png"></a>
