@@ -44,6 +44,10 @@ export default class ProductsTable extends Component {
                     dataIndex: 'price',
                 },
                 {
+                    title: 'VAT',
+                    dataIndex: 'pdv',
+                },
+                {
                     title: 'Picture',
                     dataIndex: 'image',
                     render: theImageURL => <img className="productPicture" alt={theImageURL} src={theImageURL}
@@ -221,7 +225,7 @@ export default class ProductsTable extends Component {
         let token = 'Bearer ' + this.props.token;
         axios.defaults.headers.common["Authorization"] = token;
         axios.defaults.headers.common["Content-Type"] = "application/json";
-        axios.get('https://main-server-si.herokuapp.com/api/pdv')
+        axios.get('https://main-server-si.herokuapp.com/api/pdv/active')
             .then(d => {
                 let pdvs = [];
                 for (let i = 0; i < d.data.length; i++) {
