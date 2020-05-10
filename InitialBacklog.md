@@ -186,3 +186,34 @@ Korisnik Warehouse web aplikacije mora imati pristup otpremnoj listi u formi PDF
 * Omogućiti korisniku da spasi generisani PDF na lokalni računar
 * Uraditi push koda
 * Napraviti pull request
+
+# Feature
+Primanje, slanje i evidentiranje notifikacija
+## Item
+Korisnik web aplikacije treba imati mogućnost pregleda notifikacija, notifikacije trebaju imati karakteristiku “greška”, “informacija”, itd. Notifikacije su vezane za transakcije i akcije u web aplikaciji. Klik na notifikaciju vodi na onu stvar koje se tiče notifikacija.
+### Task
+* Implementirati listu notifikacija
+* Implementirati evidentiranje notifikacija u listu pri akcijama u aplikaciji
+* Uraditi push koda
+* Napraviti pull request
+
+# Feature
+Grafički prikaz statistike
+## Item
+Korisnik treba imati mogućnost grafičkog prikaza statistike stanja proizvoda u vremenu, najprometnijih proizvoda.
+### Task
+* Implementirati izgled prozora i grafika za statistiku
+* Omogućiti preuzimanje podataka sa servera i postavljanja ih kao dataset grafika
+* Uraditi push koda
+* Napraviti pull request
+
+# Feature
+Zahtjev za proizvodima
+## Item
+ Korisnik treba imati mogućnost primanja zahtjeva za proizvodima od merchant dashboard-a, pri čemu taj zahtjev može odbiti ili prihvatiti.
+### Task
+* Implementirati listu zahtjeva
+* Omogućiti preuzimanje podataka o zahtjevima se servera
+* Implementirati prihvatanja i odbijanje zahtjeva
+* Uraditi push koda
+* Napraviti pull request
