@@ -9,7 +9,7 @@ Warehouse Web App is a module created for a software engineering course at the F
 </p>
 
 ## Get Started
-Warehouse Web App is a React app which works on all modern web browsers. To build this app, you should have Node.js installed on your local machine.
+ Warehouse Web App is a React app which works on all modern web browsers. To build this app, you should have Node.js installed on your local machine.
 
 After cloning the repository to your local machine, in the root directory:
 * Install dependencies with `npm install` 
