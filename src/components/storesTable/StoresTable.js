@@ -354,7 +354,7 @@ export default class StoresTable extends Component {
 
 
     handleTransferProducts(storeId, quantitiesToAdd, quantitiesOnWarehouse) {
-        var products = [];
+        var products = [], productsToSend = [];
         var productNames = "";
         for (var count = 0; count < quantitiesToAdd.length; count++) {
             var quantityToAdd = quantitiesToAdd[count];
@@ -372,33 +372,39 @@ export default class StoresTable extends Component {
                 );
                 return;
             }
-            let token = 'Bearer ' + this.props.token;
-            axios.defaults.headers.common["Authorization"] = token;
-            axios.defaults.headers.common["Content-Type"] = "application/json";
-            var that = this;
-            axios.post('https://main-server-si.herokuapp.com/api/inventory', { officeId: storeId, productId: productId, quantity: quantityToAdd }).then(() => {
-                var length = that.state.warehouseProducts.length;
+            productsToSend.push({productId:productId, officeId:storeId, quantity:quantityToAdd});
+        }
+
+        let token = 'Bearer ' + this.props.token;
+        axios.defaults.headers.common["Authorization"] = token;
+        axios.defaults.headers.common["Content-Type"] = "application/json";
+        var that = this;
+        let productBatch={inventory: productsToSend};
+        axios.post('https://main-server-si.herokuapp.com/api/inventory/batch', productBatch).then(() => {
+            var length = that.state.warehouseProducts.length;
+            for (var count = 0; count < quantitiesToAdd.length; count++) {
                 for (var i = 0; i < length; i++) {
-                    if (that.state.warehouseProducts[i].productId === productId) {
-                        that.state.warehouseProducts[i].quantity -= quantityToAdd;
+                    if (that.state.warehouseProducts[i].productId === this.state.productIds[count]) {
+                        that.state.warehouseProducts[i].quantity -= quantitiesToAdd[count];
 
                     }
                 }
-                that.state.warehouseProducts = that.state.warehouseProducts.filter(function (item) {
-                    return item.quantity !== 0;
-                });
-            }, (e) => {
-                message.error(e);
-                this.props.handleAddNotification(
-                    {
-                        title: "Error while transferring products to store with ID " + storeId,
-                        description: new Date().toLocaleString(),
-                        href: "/storesTable",
-                        type: "error",
-                    }
-                );
+            }
+            that.state.warehouseProducts = that.state.warehouseProducts.filter(function (item) {
+                return item.quantity !== 0;
             });
-        }
+        }, (e) => {
+            message.error(e);
+            this.props.handleAddNotification(
+                {
+                    title: "Error while transferring products to store with ID " + storeId,
+                    description: new Date().toLocaleString(),
+                    href: "/storesTable",
+                    type: "error",
+                }
+            );
+        });
+
         let offLen = this.state.offices.length, adr = "";
         for (let l = 0; l < offLen; l++) {
             if (this.state.offices[l].id === storeId) {

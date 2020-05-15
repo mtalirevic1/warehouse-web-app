@@ -6,11 +6,6 @@ import Footer from "../footer/Footer";
 
 import './ShipmentRequests.css';
 
-
-const API = 'https://main-server-si.herokuapp.com/api/products';
-
-const {Option} = Select;
-
 export default class ProductsTable extends Component {
 
     constructor(props) {
@@ -186,16 +181,6 @@ export default class ProductsTable extends Component {
             }).catch(er => {
             message.error("Unable to accept request!", [0.7]);
         });
-
-        /* for(let i =  0; i < record.requests.length; i++){
-             axios.post('https://main-server-si.herokuapp.com/api/inventory',
-             { officeId: record.office.officeId, productId: record.requests[i].product.id, quantity: record.requests[i].quantity})
-             .then(response => {
-                 message.success("Quantity changed!");
-             }).catch(er => {
-                 message.error("Unable to change quantity!", [0.7]);
-             });
-         }*/
     }
 
     onCloseAccept = () => {

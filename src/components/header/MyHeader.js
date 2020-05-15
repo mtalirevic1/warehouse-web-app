@@ -6,11 +6,10 @@ import {
     ShopOutlined,
     UserOutlined,
     UnorderedListOutlined,
-    NotificationOutlined,
     InboxOutlined
 } from '@ant-design/icons';
 import SubMenu from 'antd/lib/menu/SubMenu';
-import MenuItem from "antd/es/menu/MenuItem";
+import MenuItem from "antd/lib/menu/MenuItem";
 import { Link } from 'react-router-dom';
 import BarChartOutlined from "@ant-design/icons/lib/icons/BarChartOutlined";
 import BellOutlined from "@ant-design/icons/lib/icons/BellOutlined";
