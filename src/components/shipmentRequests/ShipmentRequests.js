@@ -91,19 +91,19 @@ export default class ProductsTable extends Component {
                     )
                 },
                 {
-                    title: 'Availavble quantity',
+                    title: 'Available quantity',
                     dataIndex: 'availableQuantity',
-                    width: '20%'
+                    width: '10%'
                 },
                 {
                     title: 'Requested quantity',
                     dataIndex: 'quantity',
-                    width: '20%'
+                    width: '10%'
                 },
                 {
                     title: 'Available',
                     dataIndex: 'available',
-                    width: '20%',
+                    width: '15%',
                     render: (text, record) =>
                         record.availableQuantity >= record.quantity ? (<a>Available</a>) : (
                             <a className="notAvailable">Not available</a>)
@@ -142,6 +142,7 @@ export default class ProductsTable extends Component {
             requestId: record.requestId,
             message: 'you accepted the request'
         }
+        let productsToSend=[]
         axios.defaults.headers.common["Authorization"] = 'Bearer ' + this.props.token;
         axios.defaults.headers.common["Content-Type"] = "application/json";
         axios.post('https://main-server-si.herokuapp.com/api/warehouse/requests/accept', data)
@@ -151,22 +152,24 @@ export default class ProductsTable extends Component {
                 console.log(size);
                 for (let i = 0; i < size; i++) {
                     let request = record.requests[i];
-                    let office = record.office;
+                    let officeId = record.office.id;
                     console.log(request);
-                    console.log(office);
+                    console.log(officeId);
                     let data1 = {
-                        officeId: office.id,
+                        officeId: officeId,
                         productId: request.product.id,
-                        quantity: request.availableQuantity - request.quantity
+                        quantity: request.quantity
                     };
+                    productsToSend.push(data1);
                     console.log(data1);
-                    axios.post('https://main-server-si.herokuapp.com/api/inventory', data1)
-                        .then(response => {
-                            message.success("Quantity changed!");
-                        }).catch(er => {
-                        message.error("Unable to change quantity!", [0.7]);
-                    });
                 }
+                let productBatch={inventory: productsToSend};
+                axios.post('https://main-server-si.herokuapp.com/api/inventory/batch', productBatch)
+                    .then(response => {
+                        message.success("Quantity changed!");
+                    }).catch(er => {
+                    message.error("Unable to change quantity!", [0.7]);
+                });
                 axios.defaults.headers.common["Authorization"] = 'Bearer ' + this.props.token;
                 axios.defaults.headers.common["Content-Type"] = "application/json";
                 axios.get('https://main-server-si.herokuapp.com/api/warehouse/requests')
@@ -230,6 +233,7 @@ export default class ProductsTable extends Component {
         if (this.state.activeItemId === record.requestId) {
             return (
                 <Modal
+                    width="min-content"
                     mask={false}
                     title="Request details"
                     centered
@@ -237,16 +241,13 @@ export default class ProductsTable extends Component {
                     onCancel={this.onCloseDetails}
                     footer={null}
                 >
-                    <div className="modalPinfo">
+                    <div className="modalTable">
                         <h1>Office details</h1>
                         <p>Address: {record.office.address}</p>
                         <p>City: {record.office.city}</p>
                         <p>Country: {record.office.country}</p>
                         <p>E-mail: {record.office.email}</p>
                         <p>Phone number: {record.office.phoneNumber}</p>
-                    </div>
-
-                    <div>
                         <Table
                             dataSource={dataSource2}
                             columns={columns2}
