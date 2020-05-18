@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Table, Layout, Popconfirm, message, Modal, Form, Input, Button, Select } from 'antd';
+import { Table, Layout, Popconfirm, message, Modal, Form, Input, Button, Select, Menu, Dropdown, List, Avatar, } from 'antd';
+import { DownOutlined, BorderOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import MyHeader from "../header/MyHeader";
 import Footer from "../footer/Footer";
@@ -13,6 +14,7 @@ const API = 'https://main-server-si.herokuapp.com/api/products';
 const confirmationText = 'Are you sure want to delete this product?';
 
 const { Option } = Select;
+
 
 export default class ProductsTable extends Component {
 
@@ -51,33 +53,7 @@ export default class ProductsTable extends Component {
                     title: 'Picture',
                     dataIndex: 'image',
                     render: theImageURL => <img className="productPicture" alt={theImageURL} src={theImageURL}
-                        width="40" height="40" />
-                },
-                {
-                    title: 'Change quantity',
-                    dataIndex: 'changequantity',
-                    render: (text, record) =>
-                        this.state.products.length >= 1 ? (
-                            <div>
-                                <a
-                                    key={record.id}
-                                    onClick={() => this.onOpenModal(record.id)}>Change quantity</a>
-                                <div>{this.renderModal(record)}</div>
-                            </div>
-                        ) : null
-                },
-                {
-                    title: 'Update product',
-                    dataIndex: 'updateProduct',
-                    render: (text, record) =>
-                        this.state.products.length >= 1 ? (
-                            <div>
-                                <a
-                                    key={record.id}
-                                    onClick={() => this.onOpenUpdate(record)}>Update product</a>
-                                <div>{this.renderUpdate(record)}</div>
-                            </div>
-                        ) : null
+                                                width="40" height="40" />
                 },
                 {
                     title: 'Delete',
@@ -89,6 +65,43 @@ export default class ProductsTable extends Component {
                             </Popconfirm>
                         ) : null
                 },
+                {
+                    title: 'More actions',
+                    dataIndex: 'operation',
+                    render: (text, record) => (
+                        <span className="table-operation">
+                            <Dropdown overlay={
+                                <Menu>
+                                    <Menu.Item>
+                                        <a
+                                            key={record.id}
+                                            onClick={() => this.onOpenModal(record)}>Change quantity</a>
+                                        <div>{this.renderModal(record)}</div>
+                                    </Menu.Item>
+
+                                    <Menu.Item>
+                                        <a
+                                            key={record.id}
+                                            onClick={() => this.onOpenUpdate(record)}>Update product</a>
+                                        <div>{this.renderUpdate(record)}</div>
+                                    </Menu.Item>
+
+                                    <Menu.Item>
+                                        <a
+                                            key={record.id}
+                                            onClick={() => this.onOpenItems(record)}>Change items and item type</a>
+                                        <div>{this.renderItems(record)}</div>
+                                    </Menu.Item>
+
+                                </Menu>
+                            }>
+                                <a>
+                                    More <DownOutlined />
+                                </a>
+                            </Dropdown>
+                        </span>
+                    ),
+                }
             ],
             isLoading: false,
             modalVisible: false,
@@ -98,7 +111,6 @@ export default class ProductsTable extends Component {
 
             isLoadingUpdate: false,
             updateVisible: false,
-            activeItem: null,
 
             img: null,
             name: null,
@@ -119,7 +131,21 @@ export default class ProductsTable extends Component {
             addDescription: null,
             addPdv: null,
 
-            pdvList: null
+            pdvList: null,
+            //Za product items and item type
+            activeItem: null,
+            modalItemsVisible: false,
+            itemTypeOptions: [],
+            allItemTypes: [],
+            currentItemType: null,
+            items: [],
+            currentItems: [],
+            itemOptions: [],
+            allItems: [],
+            itemType: null,
+            newItemName: null,
+            newItemValue: null,
+            stavke: []
         };
 
         this.handleQuantityChange = this.handleQuantityChange.bind(this);
@@ -140,6 +166,44 @@ export default class ProductsTable extends Component {
         this.handleAddDescription = this.handleAddDescription.bind(this);
         this.handleAddQuantity = this.handleAddQuantity.bind(this);
         this.handleAddPdv = this.handleAddPdv.bind(this);
+
+        this.handleNewItemValueChange = this.handleNewItemValueChange.bind(this);
+    }
+
+
+    getItemTypes() {
+        axios.defaults.headers.common["Authorization"] = 'Bearer ' + this.props.token;
+        axios.defaults.headers.common["Content-Type"] = "application/json";
+        axios.get('https://main-server-si.herokuapp.com/api/itemtypes')
+            .then(response => {
+                let itemTypes = [];
+                for (let i = 0; i < response.data.length; i++) {
+                    itemTypes.push(<Option value={response.data[i].name} key={response.data[i].id}>{response.data[i].name}</Option>);
+                }
+                this.setState({ itemTypeOptions: itemTypes, allItemTypes: response.data });
+            })
+            .catch(er => {
+                console.log("ERROR: " + er);
+                message.error("Unable to get item types!", [0.7]);
+            });
+    }
+
+    getItems = itemTypeid => {
+        axios.defaults.headers.common["Authorization"] = 'Bearer ' + this.props.token;
+        axios.defaults.headers.common["Content-Type"] = "application/json";
+        axios.get('https://main-server-si.herokuapp.com/api/itemtypes/' + itemTypeid + '/items')
+            .then(response => {
+                this.setState({ allItems: response.data });
+                let items = [];
+                for (let i = 0; i < response.data.length; i++) {
+                    items.push(<Option value={response.data[i].name} key={response.data[i].id}>{response.data[i].name}</Option>);
+                }
+                this.setState({ itemOptions: items });
+            })
+            .catch(er => {
+                console.log("ERROR: " + er);
+                message.error("Unable to get item types!", [0.7]);
+            });
     }
 
     onCloseDelete = name => {
@@ -185,6 +249,25 @@ export default class ProductsTable extends Component {
 
     handlePdvChange = (value, event) => {
         this.setState({ pdv: value });
+    }
+
+    handleItemTypeChange = (value, event) => {
+        //Ovdje moramo mijenjamo itemType, items i sa getItems() postavljamo nove vrijednosti za itemOptions i allItems
+        this.setState({ itemType: value });
+        if (value === this.state.currentItemType) this.setState({ items: this.state.currentItems })
+        else this.setState({ items: [] })
+        for (let i = 0; i < this.state.allItemTypes.length; i++) {
+            if (this.state.allItemTypes[i].name === value)
+                this.getItems(this.state.allItemTypes[i].id)
+        }
+    }
+
+    handleNewItemNameChange = (value, event) => {
+        this.setState({ newItemName: value });
+    }
+
+    handleNewItemValueChange(event) {
+        this.setState({ newItemValue: event.target.value });
     }
 
     updateAddImg(data) {
@@ -251,10 +334,76 @@ export default class ProductsTable extends Component {
         );
     };
 
-    onOpenModal = id => {
-        this.setState({ modalVisible: true, activeItemId: id })
-        this.getCurrentQuantity(id);
+    onCloseItems = name => {
+        this.setState({ modalItemsVisible: false, activeItem: null, currentItemType: null, currentItems: [], itemType: null, items: [], itemOptions: [], newItemName: null, newItemValue: null, allItems: [] });
+        if (name != null) {
+            this.props.handleAddNotification(
+                {
+                    title: "You have cancelled changing items and item type of product " + name,
+                    description: new Date().toLocaleString(),
+                    href: "/productsTable",
+                    type: "info"
+                }
+            );
+        }
     };
+
+    createList() {
+        if (this.state.items.length > 0) {
+            return (<List
+                itemLayout="horizontal"
+                dataSource={this.state.items}
+                renderItem={(el, index) => {
+                    let t = el.item.name + " (" + el.value + " " + el.item.unit + ")";
+                    return (
+                        <List.Item>
+                            <List.Item.Meta
+                                key={index}
+                                avatar={<Avatar icon={<BorderOutlined />} />}
+                                title={t}
+                            />
+                            <Popconfirm title={'Are you sure want to delete this item?'} onConfirm={() => this.deleteItem(index)}>
+                                <Button>Delete</Button>
+                            </Popconfirm>
+                        </List.Item>
+                    );
+                }
+                }
+            />);
+        }
+        else return <p>No items to show for this product!</p>;
+    }
+
+    onOpenItems = record => {
+        //Ovdje mozemo postavljati vrijednost za items!!!
+        //Postavljanje trenutne vrijednosti item type-a proizvoda
+        let txt = "";
+        if (record.itemType === null) txt += "none";
+        else {
+            txt += record.itemType.name;
+            this.getItems(record.itemType.id);
+        }
+
+
+        //Postavljanje trenutne vrijednosti item-a proizvoda
+        this.setState(
+            {
+                modalItemsVisible: true,
+                activeItem: record.id,
+                currentItemType: txt,
+                itemType: txt,
+                currentItems: record.items,
+                items: record.items
+            }
+        );
+    }
+
+
+    onOpenModal = record => {
+        this.setState({ modalVisible: true, activeItemId: record.id })
+        this.getCurrentQuantity(record.id);
+    };
+
 
     onOpenUpdate = record => {
         this.setState({
@@ -405,8 +554,6 @@ export default class ProductsTable extends Component {
             barcode: this.state.barcode,
             description: this.state.description
         };
-        console.log(this.state);
-        console.log(data1);
         axios.defaults.headers.common['Authorization'] = token;
         axios.defaults.headers.common['Content-Type'] = "application/json";
         const fd = new FormData();
@@ -532,6 +679,7 @@ export default class ProductsTable extends Component {
 
     renderUpdate = record => {
         if (this.state.id === record.id) {
+            console.log("update " + record.id);
             return (
                 <Modal
                     mask={false}
@@ -605,9 +753,9 @@ export default class ProductsTable extends Component {
                             ]}
                         >
                             <Input id="unit" name="unit" placeholder="Unit"
-                                value={this.state.unit}
-                                onChange={this.handleUnitChange}
-                                defaultValue={record.unit}
+                                   value={this.state.unit}
+                                   onChange={this.handleUnitChange}
+                                   defaultValue={record.unit}
                             />
                         </Form.Item>
                         <Form.Item
@@ -650,9 +798,9 @@ export default class ProductsTable extends Component {
                             name="productDescription"
                         >
                             <Input id="description" name="description" placeholder="Description"
-                                value={this.state.description}
-                                defaultValue={this.state.description}
-                                onChange={this.handleDescriptionChange}
+                                   value={this.state.description}
+                                   defaultValue={this.state.description}
+                                   onChange={this.handleDescriptionChange}
                             />
                         </Form.Item>
                     </Form>
@@ -664,6 +812,7 @@ export default class ProductsTable extends Component {
 
     renderModal = record => {
         if (this.state.activeItemId === record.id) {
+            console.log("quantitiy " + record.id);
             return (
                 <Modal
                     mask={false}
@@ -673,17 +822,19 @@ export default class ProductsTable extends Component {
                     onOk={() => this.changeQuantity(record.id, record.name, this.state.currentQuantity, this.state.addQuantity)}
                     onCancel={() => this.onCloseModal(record.name)}
                 >
-                    <div className="modalPinfo">
+                    <div className="modalProductinfo">
                         <h1>Product details</h1>
                         <p>Product id: {record.id}</p>
                         <p>Product name: {record.name}</p>
                         <p>Product barcode: {record.barcode}</p>
                         <p>Product unit: {record.unit}</p>
                         <p>Product price: {record.price}</p>
+                    </div>
+                    <img className="modalPicture" alt={record.image} src={record.image} />
+                    <div className="productDesc">
                         <p>Product description:</p>
                         <p>{record.description}</p>
                     </div>
-                    <img className="modalPicture" alt={record.image} src={record.image} />
                     <p className="currentQuantity">Current product quantity: {this.state.currentQuantity}</p>
                     <Form>
                         <Form.Item
@@ -713,9 +864,283 @@ export default class ProductsTable extends Component {
     };
 
 
+    addItem = values => {
+        for (let i = 0; i < this.state.items.length; i++) {
+            if (this.state.items[i].item.name === values.productNewItemName) {
+                message.error("This item is already added!", [0.7]);
+                return;
+            }
+        }
+        //dodajemo novi item u items
+        let productNewItemId;
+        let productNewItemUnit;
+        for (let i = 0; i < this.state.allItems.length; i++) {
+            if (values.productNewItemName === this.state.allItems[i].name) {
+                productNewItemId = this.state.allItems[i].id;
+                productNewItemUnit = this.state.allItems[i].unit;
+                break;
+            }
+        }
+        let it = this.state.items;
+        it.push({ item: { id: productNewItemId, name: values.productNewItemName, unit: productNewItemUnit }, value: values.productNewItemValue })
+        this.setState({ items: it });
+    };
+
+    deleteItem = i => {
+        let it = this.state.items;
+        it.splice(i, 1);
+        this.setState({ items: it });
+    }
+
+    changeItems = product => {
+        if (this.state.itemType === "none") {
+            //Ovo znaci da product nema item type i da nista nije promijenjeno
+            this.props.handleAddNotification(
+                {
+                    title: "You have successfully changed item type and items for product " + product.name,
+                    description: new Date().toLocaleString(),
+                    href: "/productsTable",
+                    type: "success"
+                }
+            );
+            this.onCloseItems(null);
+            message.success("You have successfully changed items and item type of product!", [0.7]);
+            return;
+        }
+        else {
+            //postavljamo id za item Type
+            let itId = null;
+            for (let i = 0; i < this.state.allItemTypes.length; i++) {
+                if (this.state.allItemTypes[i].name === this.state.itemType) {
+                    itId = this.state.allItemTypes[i].id;
+                }
+            }
+
+            axios.defaults.headers.common["Authorization"] = 'Bearer ' + this.props.token;
+            axios.defaults.headers.common["Content-Type"] = "application/json";
+
+            axios.get('https://main-server-si.herokuapp.com/api/products/' + product.id + '/items').then(response => {
+                this.setState({ stavke: response.data });
+            })
+                .catch(er => {
+                    console.log("ERROR: " + er);
+                    message.error("Unable to show product items!", [0.7]);
+                });
+
+            //ako proizvod ima trenutno proizvode
+            if (this.state.stavke.length > 0) {
+                console.log("Ima itema");
+                console.log(this.state.stavke);
+                //prvo brisemo sve items od proizvoda
+                for (let i = 0; i < this.state.stavke.length; i++) {
+                    axios.delete('https://main-server-si.herokuapp.com/api/products/' + product.id + '/items/' + this.state.currentItems[i].item.id)
+                        .then(response => {
+                            console.log("Obrisan " + this.state.stavke[i].item.id);
+
+                            //postavljamo item type za product
+                            axios.put('https://main-server-si.herokuapp.com/api/products/itemtype', { itemTypeId: itId, productId: product.id })
+                                .then(response => {
+                                    //pridruzujemo items proizvodu
+
+                                    for (let i = 0; i < this.state.items.length; i++) {
+                                        axios.post('https://main-server-si.herokuapp.com/api/products/items',
+                                            {
+                                                productId: product.id,
+                                                itemId: this.state.items[i].item.id,
+                                                value: this.state.items[i].value
+                                            }
+                                        ).then(response => {
+                                            if (i === this.state.items.length - 1) {
+                                                console.log("aaa");
+                                                //ovdje treba azurirati listu proizvoda
+                                                this.setState({ isLoading: true });
+                                                axios.get('https://main-server-si.herokuapp.com/api/products').then(response => {
+                                                    this.setState({ products: response.data, isLoading: false });
+                                                    this.onCloseItems(null);
+                                                    message.success("You have successfully changed items and item type of product!", [0.7]);
+                                                    return;
+                                                })
+                                                    .catch(er => {
+                                                        console.log("ERROR: " + er);
+                                                        message.error("Unable to show products!", [0.7]);
+                                                    });
+                                            }
+                                        })
+                                            .catch(er => {
+                                                console.log("ERROR: " + er);
+                                                message.error("Unable to add item for this product!", [0.7]);
+                                            });
+                                    }
+
+                                })
+                                .catch(er => {
+                                    console.log("ERROR: " + er);
+                                    message.error("Unable to set item type for this product!", [0.7]);
+                                });
+
+                        })
+                        .catch(er => {
+                            console.log("ERROR: " + er);
+                            message.error("Unable to delete item from product's item list!", [0.7]);
+                        });
+                }
+            }
+            else if (this.state.stavke.length === 0) {
+                console.log("Nema itema");
+                //postavljamo item type za product
+                axios.put('https://main-server-si.herokuapp.com/api/products/itemtype', { itemTypeId: itId, productId: product.id })
+                    .then(response => {
+                        if (this.state.items.length > 0) {
+                            for (let i = 0; i < this.state.items.length; i++) {
+                                axios.post('https://main-server-si.herokuapp.com/api/products/items',
+                                    {
+                                        productId: product.id,
+                                        itemId: this.state.items[i].item.id,
+                                        value: this.state.items[i].value
+                                    }
+                                ).then(response => {
+                                    console.log(i);
+                                    if (i === this.state.items.length - 1) {
+                                        console.log("aaa");
+                                        //ovdje treba azurirati listu proizvoda
+                                        this.setState({ isLoading: true });
+                                        axios.get('https://main-server-si.herokuapp.com/api/products').then(response => {
+                                            this.setState({ products: response.data, isLoading: false });
+                                            this.onCloseItems(null);
+                                            message.success("You have successfully changed items and item type of product!", [0.7]);
+                                            return;
+                                        })
+                                            .catch(er => {
+                                                console.log("ERROR: " + er);
+                                                message.error("Unable to show products!", [0.7]);
+                                            });
+                                    }
+                                })
+                                    .catch(er => {
+                                        console.log("ERROR: " + er);
+                                        message.error("Unable to add item for this product!", [0.7]);
+                                    });
+                            }
+                        }
+                        //ako se ne dodaju itemi samo azuriraj proizvode
+                        else if (this.state.items.length === 0) {
+                            this.setState({ isLoading: true });
+                            axios.get('https://main-server-si.herokuapp.com/api/products').then(response => {
+                                this.setState({ products: response.data, isLoading: false });
+                                this.onCloseItems(null);
+                                message.success("You have successfully changed items and item type of product!", [0.7]);
+                                return;
+                            })
+                                .catch(er => {
+                                    console.log("ERROR: " + er);
+                                    message.error("Unable to show products!", [0.7]);
+                                });
+                        }
+
+                    })
+                    .catch(er => {
+                        console.log("ERROR: " + er);
+                        message.error("Unable to set item type for this product!", [0.7]);
+                    });
+            }
+        }
+    }
+
+    renderItems = record => {
+        if (this.state.activeItem === record.id) {
+            console.log("items " + record.id);
+            return (
+                <Modal
+                    mask={false}
+                    title="Change product items and item type"
+                    centered
+                    visible={this.state.modalItemsVisible}
+                    onOk={() => this.changeItems(record)}
+                    onCancel={() => this.onCloseItems(record.name)}
+                >
+                    <div className="modalProductItemsinfo">
+                        <h1>Product details</h1>
+                        <p>Product id: {record.id}</p>
+                        <p>Product name: {record.name}</p>
+                    </div>
+                    <Form className="itemType">
+                        <Form.Item
+                            label="Current product item type: "
+                            name="productItemType"
+                        >
+                            <Select
+                                placeholder="productItemType"
+                                name="productItemType"
+                                id="productItemType"
+                                value={this.state.itemType}
+                                defaultValue={this.state.currentItemType}
+                                onChange={(value, event) => this.handleItemTypeChange(value, event)}
+                            >
+                                {this.state.itemTypeOptions}
+                            </Select>
+                        </Form.Item>
+                    </Form>
+                    <img className="modalPicture" alt={record.image} src={record.image} />
+                    <p className="items">Items: </p>
+                    <div>{this.createList()}</div>
+                    <p className="addNewItem">Add new item: </p>
+                    <Form
+                        onFinish={this.addItem}>
+                        <Form.Item
+                            name="productNewItemName"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please select item name!"
+                                }
+                            ]}
+                        >
+                            <Select
+                                placeholder="Item name"
+                                name="productNewItemName"
+                                id="productNewItemName"
+                                value={this.state.newItemName}
+                                onChange={(value, event) => this.handleNewItemNameChange(value, event)}
+                            >
+                                {this.state.itemOptions}
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item
+                            name="productNewItemValue"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter item value!",
+
+                                },
+                            ]}
+                        >
+                            <Input
+                                className="add-form-input"
+                                name="productNewItemValue"
+                                type="number"
+                                id="productNewItemValue"
+                                min={1}
+                                value={this.state.newItemValue}
+                                onChange={this.handleNewItemValueChange}
+                                placeholder="Item value"
+                            />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" >Add item</Button>
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            );
+        }
+    };
+
+
     componentDidMount() {
         this.setState({ isLoading: true });
         this.getPdvList();
+        this.getItemTypes();
         fetch(API)
             .then(response => response.json())
             .then(data => this.setState({ products: data, isLoading: false }));
@@ -737,20 +1162,20 @@ export default class ProductsTable extends Component {
                     }
                 );
             }).catch(er => {
-                message.error("Unable to remove product!");
-                this.props.handleAddNotification(
-                    {
-                        title: "Error while deleting product " + record.name,
-                        description: new Date().toLocaleString(),
-                        href: "/productsTable",
-                        type: "error",
-                    }
-                );
-            }).then(() => {
-                fetch(API)
-                    .then(response => response.json())
-                    .then(data => this.setState({ products: data, isLoading: false }));
-            });
+            message.error("Unable to remove product!");
+            this.props.handleAddNotification(
+                {
+                    title: "Error while deleting product " + record.name,
+                    description: new Date().toLocaleString(),
+                    href: "/productsTable",
+                    type: "error",
+                }
+            );
+        }).then(() => {
+            fetch(API)
+                .then(response => response.json())
+                .then(data => this.setState({ products: data, isLoading: false }));
+        });
     };
 
     render() {
@@ -759,9 +1184,9 @@ export default class ProductsTable extends Component {
         return (
             <Layout>
                 <MyHeader loggedInStatus={this.props.loggedInStatus}
-                    token={this.props.token}
-                    username={this.props.username}
-                    handleLogout={this.props.handleLogout} />
+                          token={this.props.token}
+                          username={this.props.username}
+                          handleLogout={this.props.handleLogout} />
                 <div className="ant-table">
                     <div className="add">
                         <Button type="primary" onClick={this.onOpenAdd}>
@@ -840,9 +1265,9 @@ export default class ProductsTable extends Component {
                                     ]}
                                 >
                                     <Input id="unit" name="unit" placeholder="Unit"
-                                        value={this.state.addUnit}
-                                        defaultValue={this.state.addUnit}
-                                        onChange={this.handleAddUnit}
+                                           value={this.state.addUnit}
+                                           defaultValue={this.state.addUnit}
+                                           onChange={this.handleAddUnit}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -855,10 +1280,10 @@ export default class ProductsTable extends Component {
                                     ]}
                                 >
                                     <Input type="number" min={0} step={1} id="quantity" name="quantity"
-                                        placeholder="Quantity"
-                                        value={this.state.addNumber}
-                                        defaultValue={this.state.addNumber}
-                                        onChange={this.handleAddQuantity}
+                                           placeholder="Quantity"
+                                           value={this.state.addNumber}
+                                           defaultValue={this.state.addNumber}
+                                           onChange={this.handleAddQuantity}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -901,9 +1326,9 @@ export default class ProductsTable extends Component {
                                     name="productDecsription"
                                 >
                                     <Input id="description" name="description" placeholder="Description"
-                                        value={this.state.addDescription}
-                                        defaultValue={this.state.addDescription}
-                                        onChange={this.handleAddDescription}
+                                           value={this.state.addDescription}
+                                           defaultValue={this.state.addDescription}
+                                           onChange={this.handleAddDescription}
                                     />
                                 </Form.Item>
                             </Form>

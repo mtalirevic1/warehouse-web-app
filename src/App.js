@@ -14,6 +14,7 @@ import StoresTable from "./components/storesTable/StoresTable";
 import Notifications from "./components/notifications/Notifications";
 import ShipmentRequests from "./components/shipmentRequests/ShipmentRequests";
 import Graphs from "./components/graphs/Graphs";
+import ItemTypes from "./components/itemTypes/ItemTypes";
 
 let socket, stompClient;
 const SERVER_URL = 'https://log-server-si.herokuapp.com/ws';
@@ -239,6 +240,18 @@ class App extends Component {
                         username={this.state.username}
                         notifications={this.state.notifications}
                         component={Graphs}
+                        handleLogout={this.handleLogout}
+                        handleAddNotification={this.handleAddNotification}
+                        handleDeleteNotification={this.handleDeleteNotification}
+                    />
+                    <ProtectedRoute
+                        path="/itemTypes"
+                        exact
+                        loggedInStatus={this.state.loggedInStatus}
+                        token={this.state.token}
+                        username={this.state.username}
+                        notifications={this.state.notifications}
+                        component={ItemTypes}
                         handleLogout={this.handleLogout}
                         handleAddNotification={this.handleAddNotification}
                         handleDeleteNotification={this.handleDeleteNotification}
