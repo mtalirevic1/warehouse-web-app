@@ -36,13 +36,16 @@ const MyHeader = props => {
                         <Menu.Item key="2">
                             <Link to='/productsTable'>Display products</Link>
                         </Menu.Item>
+                        <Menu.Item key="3">
+                            <Link to='/itemTypes'>Display products by item type</Link>
+                        </Menu.Item>
                     </SubMenu>
 
                     <SubMenu
                         key="sub2"
                         title={<span><ShopOutlined style={{ width: '20px', height: '20px' }} />Stores</span>}
                     >
-                        <Menu.Item key="3">
+                        <Menu.Item key="4">
                             <Link to='/storesTable'>Display stores</Link>
                         </Menu.Item>
                     </SubMenu>
@@ -51,10 +54,10 @@ const MyHeader = props => {
                         key="sub3"
                         title={<span><UnorderedListOutlined style={{ width: '20px', height: '20px' }} />Logs</span>}
                     >
-                        <Menu.Item key="4">
+                        <Menu.Item key="5">
                             <Link to='/receivedLogs'>Display received product logs</Link>
                         </Menu.Item>
-                        <Menu.Item key="5">
+                        <Menu.Item key="6">
                             <Link to='/sentLogs'>Display sent product logs</Link>
                         </Menu.Item>
                     </SubMenu>
@@ -62,7 +65,7 @@ const MyHeader = props => {
                         key="sub4"
                         title={<span><InboxOutlined style={{ width: '20px', height: '20px' }} />Requests</span>}
                     >
-                        <Menu.Item key="6">
+                        <Menu.Item key="7">
                             <Link to='/requests'>Display requests</Link>
                         </Menu.Item>
                     </SubMenu>
@@ -70,7 +73,7 @@ const MyHeader = props => {
                         key="sub5"
                         title={<span><BarChartOutlined style={{ width: '20px', height: '20px' }} />Statistics</span>}
                     >
-                        <Menu.Item key="7">
+                        <Menu.Item key="8">
                             <Link to='/graphicStatistics'>Display statistic graphics</Link>
                         </Menu.Item>
                     </SubMenu>
@@ -78,7 +81,7 @@ const MyHeader = props => {
                         key="sub6"
                         title={<span><BellOutlined style={{ width: '20px', height: '20px' }} />Notifications</span>}
                     >
-                        <Menu.Item key="8">
+                        <Menu.Item key="9">
                             <Link to='/notifications'>Display notifications</Link>
                         </Menu.Item>
                     </SubMenu>

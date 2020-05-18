@@ -18,10 +18,15 @@
   height: auto;
 }
 
-.modalPinfo {
-  width: 50%;
-  height: 300px;
+.modalProductinfo {
+  width: 57%;
+  height: 220px;
   float: left;
+}
+
+.productDesc {
+  float: left;
+  width: 100%;
 }
 
 .modalPicture {
@@ -48,7 +53,6 @@ p {
   font-weight: bold;
 }
 
-
 .add {
   margin-top: 40px;
   margin-left: 20px;
@@ -56,8 +60,30 @@ p {
   background-color: whitesmoke;
 }
 
-/*
-.ant-modal-centered {
-  background-color: rgba(255, 255, 255, 0.05);
+.ant-form-item-label > label {
+  font-size: 15px;
+  color: #0150ac;
+  font-weight: bold;
+  padding-right: 40px;
 }
-*/
+
+.itemType {
+  margin-top: 10px;
+  width: 50%;
+  float: left;
+}
+.modalProductItemsinfo {
+  width: 57%;
+  height: 120px;
+  float: left;
+}
+
+.items,
+.addNewItem {
+  color: #0150ac;
+  font-weight: bold;
+}
+
+.addNewItem {
+  margin-top: 10px;
+}
