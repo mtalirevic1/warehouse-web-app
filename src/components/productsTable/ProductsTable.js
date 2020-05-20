@@ -93,6 +93,13 @@ export default class ProductsTable extends Component {
                                         <div>{this.renderItems(record)}</div>
                                     </Menu.Item>
 
+                                    <Menu.Item>
+                                        <a
+                                            key={record.id}
+                                            onClick={() => this.onOpenDiscount(record)}>Change discount percentage</a>
+                                        <div>{this.renderDiscount(record)}</div>
+                                    </Menu.Item>
+
                                 </Menu>
                             }>
                                 <a>
@@ -108,6 +115,7 @@ export default class ProductsTable extends Component {
             activeItemId: null,
             currentQuantity: null,
             addQuantity: null,
+            discountId: null,
 
             isLoadingUpdate: false,
             updateVisible: false,
@@ -130,6 +138,9 @@ export default class ProductsTable extends Component {
             addBarcode: null,
             addDescription: null,
             addPdv: null,
+
+            discountVisible: false,
+            discount: null,
 
             pdvList: null,
             //Za product items and item type
@@ -157,6 +168,8 @@ export default class ProductsTable extends Component {
         this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
         this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
         this.handlePdvChange = this.handlePdvChange.bind(this);
+
+        this.handleDiscountChange = this.handleDiscountChange.bind(this);
 
         this.updateAddImg = this.updateAddImg.bind(this);
         this.handleAddName = this.handleAddName.bind(this);
@@ -249,6 +262,10 @@ export default class ProductsTable extends Component {
 
     handlePdvChange = (value, event) => {
         this.setState({ pdv: value });
+    }
+
+    handleDiscountChange = (event) =>{
+        this.setState({discount: event.target.value});
     }
 
     handleItemTypeChange = (value, event) => {
@@ -457,6 +474,29 @@ export default class ProductsTable extends Component {
             }
         );
     };
+
+    onOpenDiscount = record => {
+        console.log("opened discount");
+        this.setState({
+            discountVisible: true,
+            discount: record.discount.percentage,
+            discountId: record.id
+        });
+    };
+
+    onCloseDiscount = name => {
+        this.setState({
+           discountVisible: false, discount: null, discountId: null
+        });
+        this.props.handleAddNotification(
+            {
+                title: "You have cancelled changing the discount for "+name,
+                description: new Date().toLocaleString(),
+                href: "/productsTable",
+                type: "info"
+            }
+        );
+    }
 
     add = () => {
         let token = 'Bearer ' + this.props.token;
@@ -676,6 +716,32 @@ export default class ProductsTable extends Component {
         })
     }
 
+    changeDiscount =(id, discount, name) =>{
+        let token = 'Bearer ' + this.props.token;
+        axios.defaults.headers.common["Authorization"] = token;
+        axios.defaults.headers.common["Content-Type"] = "application/json";
+        axios.put('https://main-server-si.herokuapp.com/api/products/'+id+'/discount', {
+            percentage: discount
+        }).then( p => {
+                message.success("You successfully changed discount!", [0.7]);
+                fetch(API)
+                .then(response => response.json())
+                .then(data => this.setState({ products: data, isLoading: false, discountVisible: false }));
+            }
+        ).catch(err => {
+            console.log("ERROR: " + err);
+            message.error("Unable to change product discount!", [0.7]);
+            this.props.handleAddNotification(
+                {
+                    title: "Error while changing discount of product " + name,
+                    description: new Date().toLocaleString(),
+                    href: "/productsTable",
+                    type: "error",
+                }
+            );
+        })
+    }
+
 
     renderUpdate = record => {
         if (this.state.id === record.id) {
@@ -859,6 +925,47 @@ export default class ProductsTable extends Component {
                         </Form.Item>
                     </Form>
                 </Modal>
+            );
+        }
+    };
+
+    renderDiscount = record =>{
+        if (this.state.discountId === record.id) {
+            console.log("discount on product: " + record.id);
+            return (
+                <Modal
+                    mask={false}
+                    title="Change product discount"
+                    centered
+                    visible={this.state.discountVisible}
+                    onOk={() => this.changeDiscount(record.id, this.state.discount, record.name)}
+                    onCancel={() => this.onCloseDiscount(record.name)}
+                >
+                    <Form>
+                        <Form.Item
+                            name="productDiscount"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter the discount!",
+
+                                },
+                            ]}
+                        >
+                            <Input
+                                value={this.state.discount} onChange={this.handleDiscountChange}
+                                className="modal-form-input"
+                                name="number"
+                                id="number"
+                                type="number"
+                                min={0}
+                                placeholder="Discount"
+                                defaultValue={record.discount.percentage}
+                            />
+                        </Form.Item>
+                    </Form>
+                </Modal>
+
             );
         }
     };
@@ -1346,4 +1453,5 @@ export default class ProductsTable extends Component {
             </Layout>
         );
     }
+
 }
