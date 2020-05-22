@@ -49,11 +49,11 @@ const HomePage = props => {
                         </div>
                         <div className="circle">
                             <BarChartOutlined style={{ width: '50px', height: '50px' }} className="bigicon" />
-                            <h2>Reports</h2>
+                            <h2>Statistics</h2>
                             <hr className="smallhr"></hr>
                             <p>
-                                You can see different reports on assigned products that can be filtered by date,
-                                amount of assigned products, or store name.
+                                You can see different statistics on various product imports, exports
+                                and traffic represented visually.
                             </p>
                         </div>
                     </div>
