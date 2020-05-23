@@ -357,9 +357,17 @@ export default class StoresTable extends Component {
         var products = [], productsToSend = [];
         var productNames = "";
         for (var count = 0; count < quantitiesToAdd.length; count++) {
-            var quantityToAdd = quantitiesToAdd[count];
-            var maxAllowed = quantitiesOnWarehouse[count];
             var productId = this.state.productIds[count];
+            if(productId === null || productId === "") {
+                message.error("All fields must have a product selected!", [0.7]);
+                return;
+            }
+            var quantityToAdd = quantitiesToAdd[count];
+            if(quantityToAdd === null || quantityToAdd === "") {
+                message.error("All fields must have quantity inserted!", [0.7]);
+                return;
+            }
+            var maxAllowed = quantitiesOnWarehouse[count];
             if (quantityToAdd > maxAllowed || quantityToAdd < 0) {
                 message.error("Input not in allowed range");
                 this.props.handleAddNotification(
@@ -375,6 +383,7 @@ export default class StoresTable extends Component {
             productsToSend.push({productId:productId, officeId:storeId, quantity:quantityToAdd});
         }
 
+        
         let token = 'Bearer ' + this.props.token;
         axios.defaults.headers.common["Authorization"] = token;
         axios.defaults.headers.common["Content-Type"] = "application/json";
