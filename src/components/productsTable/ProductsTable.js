@@ -547,9 +547,60 @@ export default class ProductsTable extends Component {
             quantity: this.state.addNumber
         };
 
-        if (this.state.addName === null || this.state.addPrice === null || this.state.addUnit === null ||
-            this.state.addBarcode === null || this.state.addNumber === null || this.state.addImg === null) {
-            message.error("Missing information in input fields!", [0.7]);
+        // validation
+        if (data1.name === null || data1.name === "") {
+            message.error("Name field cannot be empty!", [0.7]);
+            return;
+        }
+        if (data1.price === null || data1.price === "") {
+            message.error("Price field cannot be empty!", [0.7]);
+            return;
+        }
+        let p = JSON.stringify(data1.price);
+        if(p.indexOf("-") !== -1) {
+            message.error("Price must be a positive number!", [0.7]);
+            return;
+        }
+        if (data1.unit === null || data1.unit === "") {
+            message.error("Unit field cannot be empty!", [0.7]);
+            return;
+        }
+        if (data1.quantity === null || data1.quantity === "") {
+            message.error("Quantity field cannot be empty!", [0.7]);
+            return;
+        }
+        let q = JSON.stringify(data1.quantity);
+        if(q.indexOf("-") !== -1) {
+            message.error("Quantity must be a positive number!", [0.7]);
+            return;
+        }
+        if(q.indexOf(".") !== -1) {
+            message.error("Quantity must be a integer, it cannot contain a decimal point!", [0.7]);
+            return;
+        }
+        if (data1.barcode === null || data1.barcode === "") {
+            message.error("Barcode field cannot be empty!", [0.7]);
+            return;
+        }
+        let b1 = JSON.stringify(data1.barcode);
+        if(b1.indexOf("-") !== -1) {
+            message.error("Barcode must be a positive number!", [0.7]);
+            return;
+        }
+        if(b1.indexOf(".") !== -1) {
+            message.error("Barcode must be a 13 digit number!", [0.7]);
+            return;
+        }
+        if(data1.barcode.length !== 13) {
+            message.error("Barcode must be a 13 digit number!", [0.7]);
+            return;
+        }
+        if(data1.pdv === null || data1.pdv === "") {
+            message.error("PDV field cannot be empty!", [0.7]);
+            return;
+        }
+        if (this.state.addImg === null) {
+            message.error("Please upload an image of the product!", [0.7]);
             return;
         }
 
@@ -638,6 +689,47 @@ export default class ProductsTable extends Component {
             barcode: this.state.barcode,
             description: this.state.description
         };
+
+        // validation
+        if (data1.name === null || data1.name === "") {
+            message.error("Name field cannot be empty!", [0.7]);
+            return;
+        }
+        if (data1.price === null || data1.price === "") {
+            message.error("Price field cannot be empty!", [0.7]);
+            return;
+        }
+        let p = JSON.stringify(data1.price);
+        if(p.indexOf("-") !== -1) {
+            message.error("Price must be a positive number!", [0.7]);
+            return;
+        }
+        if (data1.unit === null || data1.unit === "") {
+            message.error("Unit field cannot be empty!", [0.7]);
+            return;
+        }
+        if (data1.barcode === null || data1.barcode === "") {
+            message.error("Barcode field cannot be empty!", [0.7]);
+            return;
+        }
+        let b1 = JSON.stringify(data1.barcode);
+        if(b1.indexOf("-") !== -1) {
+            message.error("Barcode must be a positive number!", [0.7]);
+            return;
+        }
+        if(b1.indexOf(".") !== -1) {
+            message.error("Barcode must be a 13 digit number!", [0.7]);
+            return;
+        }
+        if(data1.barcode.length !== 13) {
+            message.error("Barcode must be a 13 digit number!", [0.7]);
+            return;
+        }
+        if(data1.pdv === null || data1.pdv === "") {
+            message.error("PDV field cannot be empty!", [0.7]);
+            return;
+        }
+
         axios.defaults.headers.common['Authorization'] = token;
         axios.defaults.headers.common['Content-Type'] = "application/json";
         const fd = new FormData();
