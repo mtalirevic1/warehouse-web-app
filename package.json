@@ -18,7 +18,7 @@
     "chromedriver": "^81.0.0",
     "customize-cra": "^0.9.1",
     "geckodriver": "^1.19.1",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.3",
     "less": "^3.11.1",
     "less-loader": "^5.0.0",
